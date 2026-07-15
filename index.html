@@ -1796,7 +1796,16 @@ ollama pull llama3
    * Persisted to localStorage for session continuity
    */
   let state = {
-    view: 'datasets',           // Current view: 'datasets' | 'schema' | 'settings'
+    view: 'datasets',           // Current view: 'datasets' | 'browse' | 'schema' | 'settings'
+    
+    // Browse Catalog state
+    browseState: {
+      tables: [],               // Fetched tables from OpenMetadata
+      loading: false,
+      searchQuery: '',
+      error: null,
+      loadedOnce: false
+    },
     
     // LLM Configuration
     settings: {
@@ -1871,6 +1880,18 @@ ollama pull llama3
           ],
           endpoint: 'https://api.perplexity.ai/chat/completions',
           webSearch: true
+        },
+        groq: { 
+          name: 'Groq (Fast & Free)',
+          models: [
+            'llama-3.3-70b-versatile',
+            'llama-3.1-8b-instant',
+            'llama3-70b-8192',
+            'llama3-8b-8192',
+            'mixtral-8x7b-32768',
+            'gemma2-9b-it'
+          ],
+          endpoint: 'https://api.groq.com/openai/v1/chat/completions'
         },
         custom: {
           name: 'Custom / Local Model',
@@ -2214,16 +2235,9 @@ ollama pull llama3
   
   /**
    * List of CORS proxies to try (in order)
+   * Note: corsproxy.io was removed in v2.1.1 — it blocks HTML content and serves ads instead
    */
   const CORS_PROXIES = [
-    {
-      name: 'corsproxy.io',
-      buildUrl: (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-      parseResponse: async (response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.text();
-      }
-    },
     {
       name: 'allorigins.win',
       buildUrl: (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
@@ -2235,8 +2249,24 @@ ollama pull llama3
       }
     },
     {
-      name: 'corsproxy.org',
-      buildUrl: (url) => `https://corsproxy.org/?${encodeURIComponent(url)}`,
+      name: 'allorigins.win (raw)',
+      buildUrl: (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      parseResponse: async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      }
+    },
+    {
+      name: 'cors.sh',
+      buildUrl: (url) => `https://proxy.cors.sh/${url}`,
+      parseResponse: async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      }
+    },
+    {
+      name: 'thingproxy',
+      buildUrl: (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
       parseResponse: async (response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return await response.text();
@@ -2253,6 +2283,50 @@ ollama pull llama3
   ];
   
   /**
+   * Validate that the fetched HTML actually corresponds to the requested URL.
+   * Detects when CORS proxies return ad pages or unrelated content.
+   */
+  const validateProxyResponse = (html, requestedUrl) => {
+    if (!html || html.length < 100) {
+      return { valid: false, reason: 'Response too short' };
+    }
+    if (!html.includes('<')) {
+      return { valid: false, reason: 'Not HTML' };
+    }
+    
+    // Detect known ad/proxy hijack patterns
+    const hijackPatterns = [
+      /hidemy\.name/i,
+      /vpn service for secure/i,
+      /protect your devices and gain access/i,
+      /Round-the-clock customer support/i,
+      /<title>[^<]*vpn[^<]*<\/title>/i,
+      /buy.{0,20}proxy/i
+    ];
+    
+    for (const pattern of hijackPatterns) {
+      if (pattern.test(html)) {
+        return { valid: false, reason: 'Proxy returned ad/VPN page instead of requested URL' };
+      }
+    }
+    
+    // Light hostname check — see if the response references the requested host
+    // (Only a heuristic; some legit pages may not. So we just warn, not block.)
+    try {
+      const requestedHost = new URL(requestedUrl).hostname.replace(/^www\./, '');
+      const hostInHtml = html.toLowerCase().includes(requestedHost.toLowerCase());
+      if (!hostInHtml && html.length < 5000) {
+        // Small response with no mention of requested host = suspicious
+        return { valid: false, reason: `Response does not reference requested host: ${requestedHost}` };
+      }
+    } catch (e) {
+      // Skip hostname check if URL parsing fails
+    }
+    
+    return { valid: true };
+  };
+  
+  /**
    * Fetch webpage content via CORS proxy with automatic fallback
    */
   const fetchUrlContent = async (url) => {
@@ -2264,7 +2338,7 @@ ollama pull llama3
         const proxyUrl = proxy.buildUrl(url);
         
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
         
         const response = await fetch(proxyUrl, { 
           signal: controller.signal,
@@ -2277,9 +2351,10 @@ ollama pull llama3
         
         const html = await proxy.parseResponse(response);
         
-        // Validate we got actual HTML content
-        if (!html || html.length < 100 || !html.includes('<')) {
-          throw new Error('Invalid HTML response');
+        // Validate response is actually from the requested URL (not hijacked)
+        const validation = validateProxyResponse(html, url);
+        if (!validation.valid) {
+          throw new Error(validation.reason);
         }
         
         console.log(`Success with proxy: ${proxy.name}`);
@@ -2662,6 +2737,20 @@ ollama pull llama3
         };
         break;
       
+      case 'groq':
+        endpoint = providerConfig.endpoint;
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        };
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.3,
+          max_tokens: 4096
+        };
+        break;
+      
       case 'custom':
         // Custom/Local model configuration
         const customConfig = providerConfig.customConfig;
@@ -2723,6 +2812,7 @@ ollama pull llama3
       case 'openai':
       case 'mistral':
       case 'perplexity':
+      case 'groq':
         return data.choices?.[0]?.message?.content || '';
       case 'openai_search':
         // OpenAI Responses API returns output array with message items
@@ -3497,6 +3587,10 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
               onclick="App.navigate('datasets')">
         📊 Datasets
       </button>
+      <button class="nav-tab ${state.view === 'browse' ? 'active' : ''}" 
+              onclick="App.navigate('browse')">
+        🔗 Browse Catalog
+      </button>
       <button class="nav-tab ${state.view === 'schema' ? 'active' : ''}" 
               onclick="App.navigate('schema')">
         🔧 Schema
@@ -3723,6 +3817,132 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
   `;
   
   /**
+   * Render browse catalog view — browse tables from OpenMetadata
+   */
+  const renderBrowse = () => {
+    const { tables, loading, searchQuery, error, loadedOnce } = state.browseState;
+    const omConfigured = state.settings.openMetadata?.url && state.settings.openMetadata?.jwtToken;
+    
+    // Filter tables by search query
+    const filteredTables = searchQuery 
+      ? tables.filter(t => 
+          t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (t.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (t.fullyQualifiedName || '').toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : tables;
+    
+    return `
+      <div style="max-width: 1100px;">
+        <div class="flex justify-between items-center mb-3">
+          <div>
+            <h2 class="card-title" style="margin: 0;">Browse OpenMetadata Catalog</h2>
+            <p class="text-sm text-muted" style="margin: 4px 0 0 0;">
+              Browse tables from your OpenMetadata catalog. Load any table to generate metadata with AI.
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="App.fetchOpenMetadataTables()" 
+                    ${loading ? 'disabled' : ''}
+                    class="btn-primary">
+              ${loading ? '⏳ Loading...' : (loadedOnce ? '🔄 Refresh' : '📥 Load Tables')}
+            </button>
+          </div>
+        </div>
+        
+        ${!omConfigured ? `
+          <div class="card mb-3" style="background: var(--color-background-warning); border: 1px solid var(--color-accent-warning);">
+            <p class="font-medium" style="color: var(--color-text-warning); margin: 0 0 8px 0;">⚠️ OpenMetadata not configured</p>
+            <p class="text-sm" style="color: var(--color-text-warning); margin: 0 0 12px 0;">
+              Configure your OpenMetadata URL and JWT token in Settings before browsing.
+            </p>
+            <button onclick="App.navigate('settings')" class="btn-sm">Go to Settings →</button>
+          </div>
+        ` : ''}
+        
+        ${error ? `
+          <div class="card mb-3" style="background: var(--color-background-danger); border: 1px solid var(--color-accent-danger);">
+            <p class="font-medium" style="color: var(--color-text-danger); margin: 0 0 4px 0;">❌ Error loading tables</p>
+            <p class="text-sm" style="color: var(--color-text-danger); margin: 0; font-family: monospace;">${error}</p>
+          </div>
+        ` : ''}
+        
+        ${omConfigured && !loadedOnce && !loading ? `
+          <div class="card" style="text-align: center; padding: 48px 24px;">
+            <div style="font-size: 3rem; margin-bottom: 16px;">🔗</div>
+            <h3 style="margin: 0 0 8px 0;">Ready to Browse</h3>
+            <p class="text-muted" style="margin: 0 0 20px 0;">
+              Click "Load Tables" to fetch all tables from your OpenMetadata catalog.
+            </p>
+            <p class="text-sm text-muted" style="margin: 0;">
+              Connected to: <code>${state.settings.openMetadata.url}</code>
+            </p>
+          </div>
+        ` : ''}
+        
+        ${loadedOnce && tables.length > 0 ? `
+          <div class="card mb-3" style="padding: 16px;">
+            <div class="flex gap-2 items-center" style="flex-wrap: wrap;">
+              <input type="text" 
+                     placeholder="🔍 Search tables by name, description, or FQN..." 
+                     value="${searchQuery}"
+                     oninput="App.updateBrowseSearch(this.value)"
+                     style="flex: 1; min-width: 250px; padding: 8px 12px; border: 1px solid var(--color-border-tertiary); border-radius: var(--radius-sm); background: var(--color-background-primary);">
+              <span class="text-sm text-muted">
+                ${filteredTables.length} of ${tables.length} tables
+              </span>
+            </div>
+          </div>
+          
+          <div style="display: grid; gap: 12px;">
+            ${filteredTables.length === 0 ? `
+              <div class="card" style="text-align: center; padding: 32px;">
+                <p class="text-muted" style="margin: 0;">No tables match your search.</p>
+              </div>
+            ` : filteredTables.map(table => `
+              <div class="card" style="padding: 16px;">
+                <div class="flex justify-between items-start" style="gap: 12px;">
+                  <div style="flex: 1; min-width: 0;">
+                    <div class="flex items-center gap-2" style="margin-bottom: 6px;">
+                      <h4 style="margin: 0; font-size: 1rem;">📋 ${table.name}</h4>
+                      ${table.tableType ? `<span class="badge badge-info" style="font-size: 0.7rem;">${table.tableType}</span>` : ''}
+                      ${table.columns?.length ? `<span class="text-sm text-muted">${table.columns.length} columns</span>` : ''}
+                    </div>
+                    <p class="text-sm text-muted" style="margin: 0 0 8px 0; font-family: monospace; word-break: break-all;">
+                      ${table.fullyQualifiedName || ''}
+                    </p>
+                    ${table.description ? `
+                      <p class="text-sm" style="margin: 0; color: var(--color-text-secondary);">
+                        ${table.description.length > 200 ? table.description.slice(0, 200) + '...' : table.description}
+                      </p>
+                    ` : '<p class="text-sm text-muted" style="margin: 0; font-style: italic;">No description</p>'}
+                  </div>
+                  <div style="flex-shrink: 0;">
+                    <button onclick="App.loadTableFromOpenMetadata('${table.id}', '${(table.fullyQualifiedName || '').replace(/'/g, "\\'")}')"
+                            class="btn-primary btn-sm">
+                      Load →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+        
+        ${loadedOnce && tables.length === 0 && !loading ? `
+          <div class="card" style="text-align: center; padding: 48px 24px;">
+            <div style="font-size: 3rem; margin-bottom: 16px;">📭</div>
+            <h3 style="margin: 0 0 8px 0;">No tables found</h3>
+            <p class="text-muted" style="margin: 0;">
+              Your OpenMetadata catalog doesn't have any tables yet, or you may not have permissions to view them.
+            </p>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  };
+  
+  /**
    * Render schema builder view
    */
   const renderSchema = () => `
@@ -3872,6 +4092,11 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
                 </div>
               </div>
             ` : ''}
+            <button onclick="App.navigate('browse')" 
+                    style="background: var(--color-background-secondary); color: var(--color-text-primary); border: 1px solid var(--color-border-tertiary);"
+                    title="Browse tables from OpenMetadata catalog">
+              🔗 Browse OpenMetadata
+            </button>
             <label style="cursor: pointer;">
               <input type="file" 
                      accept=".csv,.xlsx,.xls,.json,.txt,.tsv" 
@@ -4432,6 +4657,7 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       ${renderNav()}
       ${state.view === 'settings' ? renderSettings() : 
         state.view === 'schema' ? renderSchema() : 
+        state.view === 'browse' ? renderBrowse() :
         renderDatasets()}
       ${renderToast()}
     `;
@@ -4883,6 +5109,163 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
         console.error('Connection test failed:', error);
         showToast(`❌ Connection failed: ${error.message}`, 'error');
       }
+    },
+    
+    // ============================================
+    // BROWSE OPENMETADATA CATALOG
+    // ============================================
+    
+    /**
+     * Update browse search query
+     */
+    updateBrowseSearch: (query) => {
+      state.browseState.searchQuery = query;
+      render();
+    },
+    
+    /**
+     * Fetch tables from OpenMetadata
+     */
+    fetchOpenMetadataTables: async () => {
+      const { url, jwtToken } = state.settings.openMetadata || {};
+      
+      if (!url || !jwtToken) {
+        showToast('Please configure OpenMetadata in Settings first', 'error');
+        state.browseState.error = 'OpenMetadata URL and JWT token required';
+        render();
+        return;
+      }
+      
+      state.browseState.loading = true;
+      state.browseState.error = null;
+      render();
+      
+      try {
+        // Fetch tables with a large limit to get most/all tables
+        // Include fields we need for display
+        const endpoint = '/api/v1/tables?limit=500&fields=columns,description,tableType';
+        const response = await App._fetchOpenMetadata(endpoint);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText.slice(0, 200)}`);
+        }
+        
+        const data = await response.json();
+        const tables = data.data || [];
+        
+        state.browseState.tables = tables;
+        state.browseState.loadedOnce = true;
+        state.browseState.loading = false;
+        
+        showToast(`Loaded ${tables.length} tables from OpenMetadata`, 'success');
+        render();
+        
+      } catch (error) {
+        console.error('Failed to fetch tables:', error);
+        state.browseState.error = error.message;
+        state.browseState.loading = false;
+        showToast('Failed to load tables: ' + error.message, 'error');
+        render();
+      }
+    },
+    
+    /**
+     * Load a table from OpenMetadata as a dataset
+     */
+    loadTableFromOpenMetadata: async (tableId, fqn) => {
+      showToast(`Loading ${fqn}...`, 'info');
+      
+      try {
+        // Fetch full table details including columns
+        const tableResp = await App._fetchOpenMetadata(`/api/v1/tables/${tableId}?fields=columns,description,tableType,owner,tags,database,databaseSchema`);
+        
+        if (!tableResp.ok) {
+          throw new Error(`Failed to fetch table details: HTTP ${tableResp.status}`);
+        }
+        
+        const table = await tableResp.json();
+        
+        // Try to fetch sample data (may not be available for all tables)
+        let sampleRows = [];
+        let sampleCols = [];
+        
+        try {
+          const sampleResp = await App._fetchOpenMetadata(`/api/v1/tables/${tableId}/sampleData`);
+          if (sampleResp.ok) {
+            const sampleData = await sampleResp.json();
+            if (sampleData.sampleData) {
+              sampleCols = sampleData.sampleData.columns || [];
+              sampleRows = sampleData.sampleData.rows || [];
+            }
+          }
+        } catch (e) {
+          console.warn('No sample data available:', e.message);
+        }
+        
+        // Build headers from columns if no sample data
+        const headers = sampleCols.length > 0 
+          ? sampleCols 
+          : (table.columns || []).map(c => c.name);
+        
+        // Build dataset from table metadata
+        const dataset = {
+          id: generateId(),
+          name: table.name,
+          fileType: 'openmetadata',
+          source: 'openmetadata',
+          sourceFqn: table.fullyQualifiedName,
+          sourceId: table.id,
+          uploadedAt: new Date().toISOString(),
+          data: {
+            headers: headers,
+            rows: sampleRows,
+            rowCount: sampleRows.length,
+            columnInfo: (table.columns || []).map(c => ({
+              name: c.name,
+              dataType: c.dataType,
+              description: c.description || ''
+            }))
+          },
+          metadata: {
+            // Pre-populate known metadata from OpenMetadata
+            'Dataset Title': table.displayName || table.name,
+            'Description': table.description || '',
+            'Source URL': state.settings.openMetadata.url + '/table/' + encodeURIComponent(table.fullyQualifiedName)
+          },
+          augmented: false
+        };
+        
+        state.datasets.push(dataset);
+        saveState();
+        
+        showToast(`Loaded "${table.name}" — ${headers.length} columns, ${sampleRows.length} sample rows`, 'success');
+        
+        // Switch to datasets view and open the dataset
+        state.view = 'datasets';
+        state.currentDataset = dataset;
+        render();
+        
+      } catch (error) {
+        console.error('Load table error:', error);
+        showToast('Failed to load table: ' + error.message, 'error');
+      }
+    },
+    
+    /**
+     * Helper: fetch from OpenMetadata via proxy
+     */
+    _fetchOpenMetadata: async (endpoint, options = {}) => {
+      const { url, jwtToken } = state.settings.openMetadata;
+      const targetUrl = `${url}${endpoint}`;
+      const proxyUrl = `/proxy/${targetUrl}`;
+      
+      const headers = { ...options.headers };
+      if (jwtToken) {
+        headers['Authorization'] = `Bearer ${jwtToken}`;
+      }
+      
+      return fetch(proxyUrl, { ...options, headers });
     },
     
     /**
@@ -5729,7 +6112,7 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       const field = state.schema.find(f => f.id === fieldId);
       if (!dataset || !field) return;
       
-      if (!state.settings.apiKey) {
+      if (!state.settings.apiKey && state.settings.provider !== 'custom') {
         showToast('Please configure your API key in Settings', 'error');
         return;
       }
