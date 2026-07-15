@@ -3,68 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dataset Metadata Augmenter</title>
-  <meta name="description" content="AI-powered metadata augmentation for research datasets from government and open data platforms">
-  <meta name="author" content="Aakash">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <title>Dataset Metadata Augmenter — AI-Powered Dataset Cataloging</title>
+  <meta name="description" content="Transform undocumented datasets into well-cataloged data assets. AI-powered metadata generation with World Bank standards and OpenMetadata integration.">
+  <meta name="author" content="Aakash Sharma">
+  <meta name="keywords" content="metadata, dataset, cataloging, AI, LLM, OpenMetadata, data governance, open data">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
     /* ============================================
-       CSS VARIABLES & THEME
+       CSS VARIABLES & THEME - Professional Dark Theme
        ============================================ */
     :root {
-      --color-background-primary: #ffffff;
-      --color-background-secondary: #f7f7f5;
-      --color-background-tertiary: #efefec;
-      --color-background-info: #e6f1fb;
-      --color-background-success: #eaf3de;
-      --color-background-warning: #faeeda;
-      --color-background-danger: #fcebeb;
+      /* Colors - Dark theme default */
+      --color-bg-base: #0a0a0b;
+      --color-bg-surface: #111113;
+      --color-bg-elevated: #18181b;
+      --color-bg-hover: #222225;
+      --color-bg-accent: #1a1a2e;
       
-      --color-text-primary: #1a1a1a;
-      --color-text-secondary: #666666;
-      --color-text-tertiary: #999999;
-      --color-text-info: #185fa5;
-      --color-text-success: #3b6d11;
-      --color-text-warning: #854f0b;
-      --color-text-danger: #a32d2d;
+      --color-text-primary: #fafafa;
+      --color-text-secondary: #a1a1aa;
+      --color-text-muted: #71717a;
       
-      --color-border-primary: rgba(0, 0, 0, 0.4);
-      --color-border-secondary: rgba(0, 0, 0, 0.3);
-      --color-border-tertiary: rgba(0, 0, 0, 0.15);
+      --color-border: rgba(255, 255, 255, 0.08);
+      --color-border-strong: rgba(255, 255, 255, 0.15);
       
-      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      /* Accent colors */
+      --color-accent-primary: #6366f1;
+      --color-accent-primary-hover: #818cf8;
+      --color-accent-secondary: #22d3ee;
+      --color-accent-success: #34d399;
+      --color-accent-warning: #fbbf24;
+      --color-accent-danger: #f87171;
       
-      --border-radius-sm: 4px;
-      --border-radius-md: 8px;
-      --border-radius-lg: 12px;
+      /* Gradients */
+      --gradient-hero: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+      --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
       
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+      /* Typography */
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+      
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      
+      /* Border radius */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+      
+      /* For the tool section - keep original light/dark */
+      --color-background-primary: #18181b;
+      --color-background-secondary: #222225;
+      --color-background-tertiary: #111113;
+      --color-background-info: #1e3a5f;
+      --color-background-success: #14532d;
+      --color-background-warning: #713f12;
+      --color-background-danger: #7f1d1d;
+      
+      --color-text-info: #7dd3fc;
+      --color-text-success: #86efac;
+      --color-text-warning: #fcd34d;
+      --color-text-danger: #fca5a5;
+      
+      --color-border-primary: rgba(255, 255, 255, 0.2);
+      --color-border-secondary: rgba(255, 255, 255, 0.15);
+      --color-border-tertiary: rgba(255, 255, 255, 0.08);
     }
     
-    @media (prefers-color-scheme: dark) {
+    /* Light theme */
+    @media (prefers-color-scheme: light) {
       :root {
-        --color-background-primary: #1a1a1a;
-        --color-background-secondary: #252525;
-        --color-background-tertiary: #303030;
-        --color-background-info: #0c447c;
-        --color-background-success: #27500a;
-        --color-background-warning: #633806;
-        --color-background-danger: #791f1f;
+        --color-bg-base: #fafafa;
+        --color-bg-surface: #ffffff;
+        --color-bg-elevated: #ffffff;
+        --color-bg-hover: #f4f4f5;
+        --color-bg-accent: #eef2ff;
         
-        --color-text-primary: #f0f0f0;
-        --color-text-secondary: #a0a0a0;
-        --color-text-tertiary: #707070;
-        --color-text-info: #85b7eb;
-        --color-text-success: #c0dd97;
-        --color-text-warning: #fac775;
-        --color-text-danger: #f09595;
+        --color-text-primary: #18181b;
+        --color-text-secondary: #52525b;
+        --color-text-muted: #a1a1aa;
         
-        --color-border-primary: rgba(255, 255, 255, 0.4);
-        --color-border-secondary: rgba(255, 255, 255, 0.3);
-        --color-border-tertiary: rgba(255, 255, 255, 0.15);
+        --color-border: rgba(0, 0, 0, 0.06);
+        --color-border-strong: rgba(0, 0, 0, 0.12);
+        
+        --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%);
+        --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+        
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.1);
+        
+        /* Tool section light theme */
+        --color-background-primary: #ffffff;
+        --color-background-secondary: #f4f4f5;
+        --color-background-tertiary: #fafafa;
+        --color-background-info: #eff6ff;
+        --color-background-success: #f0fdf4;
+        --color-background-warning: #fffbeb;
+        --color-background-danger: #fef2f2;
+        
+        --color-text-info: #1d4ed8;
+        --color-text-success: #15803d;
+        --color-text-warning: #a16207;
+        --color-text-danger: #b91c1c;
+        
+        --color-border-primary: rgba(0, 0, 0, 0.2);
+        --color-border-secondary: rgba(0, 0, 0, 0.12);
+        --color-border-tertiary: rgba(0, 0, 0, 0.06);
       }
     }
     
@@ -81,63 +147,666 @@
       font-size: 16px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
     }
     
     body {
       font-family: var(--font-sans);
-      background: var(--color-background-tertiary);
+      background: var(--color-bg-base);
       color: var(--color-text-primary);
       line-height: 1.6;
       min-height: 100vh;
     }
     
     /* ============================================
-       LAYOUT
+       SITE NAVIGATION
        ============================================ */
-    .app-container {
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 11, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    @media (prefers-color-scheme: light) {
+      .site-nav {
+        background: rgba(255, 255, 255, 0.85);
+      }
+    }
+    
+    .site-nav-inner {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem;
-    }
-    
-    .app-header {
-      margin-bottom: 2rem;
-    }
-    
-    .app-header h1 {
-      font-size: 1.75rem;
-      font-weight: 600;
+      padding: 0 var(--space-xl);
+      height: 64px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 0.5rem;
+      justify-content: space-between;
     }
     
-    .app-header p {
+    .site-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    .site-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--gradient-hero);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    
+    .site-nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    
+    .site-nav-link {
+      padding: var(--space-sm) var(--space-md);
       color: var(--color-text-secondary);
+      text-decoration: none;
       font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+    
+    .site-nav-link:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-hover);
+    }
+    
+    .site-nav-link.active {
+      color: var(--color-accent-primary);
+    }
+    
+    .site-nav-cta {
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--color-accent-primary);
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+    
+    .site-nav-cta:hover {
+      background: var(--color-accent-primary-hover);
+      transform: translateY(-1px);
     }
     
     /* ============================================
-       NAVIGATION
+       THEME TOGGLE
+       ============================================ */
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      padding: 0;
+      margin: 0 var(--space-sm);
+    }
+    
+    .theme-toggle:hover {
+      background: var(--color-bg-hover);
+      border-color: var(--color-border-strong);
+      transform: scale(1.05);
+    }
+    
+    /* Default: dark theme shows moon, light shows sun */
+    .theme-icon-light { display: none; }
+    .theme-icon-dark { display: inline; }
+    
+    /* Light theme: show sun, hide moon */
+    [data-theme="light"] .theme-icon-light { display: inline; }
+    [data-theme="light"] .theme-icon-dark { display: none; }
+    
+    /* Dark theme: show moon, hide sun */
+    [data-theme="dark"] .theme-icon-light { display: none; }
+    [data-theme="dark"] .theme-icon-dark { display: inline; }
+    
+    /* System preference when no data-theme set */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) .theme-icon-light { display: inline; }
+      :root:not([data-theme="dark"]) .theme-icon-dark { display: none; }
+    }
+    
+    /* ============================================
+       MANUAL THEME OVERRIDES
+       ============================================ */
+    [data-theme="light"] {
+      --color-bg-base: #fafafa;
+      --color-bg-surface: #ffffff;
+      --color-bg-elevated: #ffffff;
+      --color-bg-hover: #f4f4f5;
+      --color-bg-accent: #eef2ff;
+      
+      --color-text-primary: #18181b;
+      --color-text-secondary: #52525b;
+      --color-text-muted: #a1a1aa;
+      
+      --color-border: rgba(0, 0, 0, 0.06);
+      --color-border-strong: rgba(0, 0, 0, 0.12);
+      
+      --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%);
+      --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+      
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.1);
+      
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f4f4f5;
+      --color-background-tertiary: #fafafa;
+      --color-background-info: #eff6ff;
+      --color-background-success: #f0fdf4;
+      --color-background-warning: #fffbeb;
+      --color-background-danger: #fef2f2;
+      
+      --color-text-info: #1d4ed8;
+      --color-text-success: #15803d;
+      --color-text-warning: #a16207;
+      --color-text-danger: #b91c1c;
+      
+      --color-border-primary: rgba(0, 0, 0, 0.2);
+      --color-border-secondary: rgba(0, 0, 0, 0.12);
+      --color-border-tertiary: rgba(0, 0, 0, 0.06);
+    }
+    
+    [data-theme="light"] .site-nav {
+      background: rgba(255, 255, 255, 0.85);
+    }
+    
+    [data-theme="dark"] {
+      --color-bg-base: #0a0a0b;
+      --color-bg-surface: #111113;
+      --color-bg-elevated: #18181b;
+      --color-bg-hover: #222225;
+      --color-bg-accent: #1a1a2e;
+      
+      --color-text-primary: #fafafa;
+      --color-text-secondary: #a1a1aa;
+      --color-text-muted: #71717a;
+      
+      --color-border: rgba(255, 255, 255, 0.08);
+      --color-border-strong: rgba(255, 255, 255, 0.15);
+      
+      --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+      --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+      
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+      
+      --color-background-primary: #18181b;
+      --color-background-secondary: #222225;
+      --color-background-tertiary: #111113;
+      --color-background-info: #1e3a5f;
+      --color-background-success: #14532d;
+      --color-background-warning: #713f12;
+      --color-background-danger: #7f1d1d;
+      
+      --color-text-info: #7dd3fc;
+      --color-text-success: #86efac;
+      --color-text-warning: #fcd34d;
+      --color-text-danger: #fca5a5;
+      
+      --color-border-primary: rgba(255, 255, 255, 0.2);
+      --color-border-secondary: rgba(255, 255, 255, 0.15);
+      --color-border-tertiary: rgba(255, 255, 255, 0.08);
+    }
+    
+    [data-theme="dark"] .site-nav {
+      background: rgba(10, 10, 11, 0.8);
+    }
+    
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      padding: calc(64px + var(--space-3xl)) var(--space-xl) var(--space-3xl);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-xs) var(--space-md);
+      background: var(--gradient-subtle);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      color: var(--color-accent-primary);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-accent-success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: var(--space-lg);
+      letter-spacing: -0.02em;
+    }
+    
+    .hero-title-gradient {
+      background: var(--gradient-hero);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-description {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto var(--space-xl);
+      line-height: 1.7;
+    }
+    
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: var(--color-accent-primary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-primary:hover {
+      background: var(--color-accent-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+    }
+    
+    .btn-secondary {
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border-strong);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--color-bg-hover);
+      border-color: var(--color-text-muted);
+    }
+    
+    .hero-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xl);
+      margin-top: var(--space-xl);
+    }
+    
+    .hero-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    
+    .hero-link:hover {
+      color: var(--color-text-primary);
+    }
+    
+    /* ============================================
+       FEATURES SECTION
+       ============================================ */
+    .features {
+      padding: var(--space-3xl) var(--space-xl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+    }
+    
+    .section-description {
+      color: var(--color-text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+    
+    .feature-card {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      border-color: var(--color-border-strong);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-subtle);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: var(--space-md);
+    }
+    
+    .feature-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    
+    .feature-description {
+      color: var(--color-text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    /* ============================================
+       COMPARISON TABLE
+       ============================================ */
+    .comparison {
+      padding: var(--space-3xl) var(--space-xl);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-bg-surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      padding: var(--space-md) var(--space-lg);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .comparison-table th {
+      background: var(--color-bg-elevated);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .comparison-table .highlight {
+      background: var(--gradient-subtle);
+      font-weight: 600;
+    }
+    
+    /* ============================================
+       GUIDE SECTION
+       ============================================ */
+    .guide {
+      padding: calc(64px + var(--space-2xl)) var(--space-xl) var(--space-3xl);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .guide h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+    }
+    
+    .guide h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: var(--space-2xl);
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .guide h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: var(--space-xl);
+      margin-bottom: var(--space-sm);
+    }
+    
+    .guide p {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-md);
+      line-height: 1.8;
+    }
+    
+    .guide ul, .guide ol {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-md);
+      padding-left: var(--space-xl);
+    }
+    
+    .guide li {
+      margin-bottom: var(--space-sm);
+    }
+    
+    .guide code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: var(--color-bg-elevated);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+    
+    .guide pre {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      overflow-x: auto;
+      margin-bottom: var(--space-lg);
+    }
+    
+    .guide pre code {
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    
+    .guide-step {
+      display: flex;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+      padding: var(--space-lg);
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    
+    .guide-step-number {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-hero);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    
+    .guide-step-content h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    
+    .guide-step-content p {
+      margin-bottom: 0;
+    }
+    
+    /* ============================================
+       TOOL SECTION (App Container)
+       ============================================ */
+    .tool-section {
+      padding: calc(64px + var(--space-lg)) var(--space-xl) var(--space-2xl);
+    }
+    
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .app-header {
+      display: none; /* Hide original header, using site nav instead */
+    }
+    
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .site-footer {
+      padding: var(--space-2xl) var(--space-xl);
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+    }
+    
+    .site-footer p {
+      color: var(--color-text-muted);
+      font-size: 0.9rem;
+    }
+    
+    .site-footer a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .site-footer a:hover {
+      color: var(--color-accent-primary);
+    }
+    
+    /* ============================================
+       TOOL NAVIGATION (inside app)
        ============================================ */
     .nav-tabs {
       display: flex;
-      gap: 8px;
-      padding: 1rem 0;
+      gap: var(--space-sm);
+      padding: var(--space-md) 0;
       border-bottom: 1px solid var(--color-border-tertiary);
-      margin-bottom: 2rem;
+      margin-bottom: var(--space-xl);
     }
     
     .nav-tab {
-      padding: 10px 20px;
+      padding: var(--space-sm) var(--space-lg);
       border: none;
       background: transparent;
       color: var(--color-text-secondary);
       font-size: 0.95rem;
       font-family: inherit;
+      font-weight: 500;
       cursor: pointer;
-      border-radius: var(--border-radius-md);
+      border-radius: var(--radius-md);
       transition: all 0.2s ease;
     }
     
@@ -147,9 +816,8 @@
     }
     
     .nav-tab.active {
-      background: var(--color-background-secondary);
-      color: var(--color-text-primary);
-      font-weight: 500;
+      background: var(--color-accent-primary);
+      color: white;
     }
     
     /* ============================================
@@ -158,128 +826,126 @@
     .card {
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-tertiary);
-      border-radius: var(--border-radius-lg);
-      padding: 1.5rem;
-    }
-    
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
     }
     
     .card-title {
       font-size: 1.1rem;
-      font-weight: 500;
-    }
-    
-    .metric-card {
-      background: var(--color-background-secondary);
-      border-radius: var(--border-radius-md);
-      padding: 1rem 1.25rem;
-    }
-    
-    .metric-label {
-      font-size: 0.8rem;
-      color: var(--color-text-secondary);
-      margin-bottom: 4px;
-    }
-    
-    .metric-value {
-      font-size: 1.5rem;
       font-weight: 600;
+      margin-bottom: var(--space-md);
     }
+    
+    .mb-2 { margin-bottom: var(--space-md); }
+    .mb-3 { margin-bottom: var(--space-lg); }
+    .mt-2 { margin-top: var(--space-md); }
+    .mt-3 { margin-top: var(--space-lg); }
     
     /* ============================================
-       FORM ELEMENTS
+       FORMS
        ============================================ */
-    input, select, textarea {
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+      color: var(--color-text-primary);
+    }
+    
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
       font-family: inherit;
       font-size: 0.95rem;
-      padding: 10px 14px;
-      border: 1px solid var(--color-border-tertiary);
-      border-radius: var(--border-radius-md);
-      background: var(--color-background-primary);
       color: var(--color-text-primary);
-      width: 100%;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: var(--color-background-secondary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
     }
     
-    input:focus, select:focus, textarea:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
       outline: none;
-      border-color: var(--color-border-secondary);
-      box-shadow: 0 0 0 3px var(--color-background-info);
-    }
-    
-    input[type="checkbox"] {
-      width: auto;
-      cursor: pointer;
+      border-color: var(--color-accent-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
     }
     
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 100px;
     }
     
-    label {
+    small.text-muted {
       display: block;
-      font-size: 0.85rem;
-      color: var(--color-text-secondary);
-      margin-bottom: 6px;
-    }
-    
-    .form-group {
-      margin-bottom: 1.25rem;
+      margin-top: var(--space-xs);
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
     }
     
     /* ============================================
        BUTTONS
        ============================================ */
-    button, .btn {
-      font-family: inherit;
-      font-size: 0.9rem;
-      padding: 10px 18px;
-      border: 1px solid var(--color-border-secondary);
-      border-radius: var(--border-radius-md);
-      background: transparent;
-      color: var(--color-text-primary);
-      cursor: pointer;
-      transition: all 0.2s ease;
+    button {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: white;
+      background: var(--color-accent-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
     
-    button:hover, .btn:hover {
-      background: var(--color-background-secondary);
-    }
-    
-    button:active, .btn:active {
-      transform: scale(0.98);
+    button:hover {
+      background: var(--color-accent-primary-hover);
+      transform: translateY(-1px);
     }
     
     button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
     }
     
-    .btn-primary {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
-      border-color: transparent;
+    button.btn-secondary {
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border-tertiary);
     }
     
-    .btn-primary:hover {
-      filter: brightness(0.95);
+    button.btn-secondary:hover {
+      background: var(--color-bg-hover);
     }
     
-    .btn-danger {
-      color: var(--color-text-danger);
+    button.btn-danger {
+      background: var(--color-accent-danger);
     }
     
-    .btn-sm {
-      padding: 6px 12px;
+    button.btn-success {
+      background: var(--color-accent-success);
+    }
+    
+    button.btn-sm {
+      padding: var(--space-xs) var(--space-sm);
       font-size: 0.8rem;
     }
     
@@ -289,7 +955,7 @@
     .table-container {
       overflow-x: auto;
       border: 1px solid var(--color-border-tertiary);
-      border-radius: var(--border-radius-lg);
+      border-radius: var(--radius-md);
     }
     
     table {
@@ -299,123 +965,201 @@
     }
     
     th, td {
-      padding: 12px 16px;
+      padding: var(--space-sm) var(--space-md);
       text-align: left;
+      border-bottom: 1px solid var(--color-border-tertiary);
     }
     
     th {
       background: var(--color-background-secondary);
-      font-weight: 500;
-      white-space: nowrap;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
     }
     
-    tr:not(:last-child) td {
-      border-bottom: 1px solid var(--color-border-tertiary);
+    tr:last-child td {
+      border-bottom: none;
     }
+    
+    tr:hover td {
+      background: var(--color-background-secondary);
+    }
+    
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
     
     /* ============================================
        BADGES & TAGS
        ============================================ */
     .badge {
       display: inline-block;
-      padding: 3px 10px;
+      padding: 2px 8px;
       font-size: 0.75rem;
       font-weight: 500;
-      border-radius: var(--border-radius-sm);
+      border-radius: 100px;
+      background: var(--color-background-secondary);
+      color: var(--color-text-secondary);
     }
     
-    .badge-info {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
+    .badge-info { background: var(--color-background-info); color: var(--color-text-info); }
+    .badge-success { background: var(--color-background-success); color: var(--color-text-success); }
+    .badge-warning { background: var(--color-background-warning); color: var(--color-text-warning); }
+    .badge-danger { background: var(--color-background-danger); color: var(--color-text-danger); }
+    
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: var(--gradient-subtle);
+      border: 1px solid var(--color-border);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      margin: 2px;
     }
     
-    .badge-success {
-      background: var(--color-background-success);
-      color: var(--color-text-success);
+    .tag-remove {
+      cursor: pointer;
+      opacity: 0.6;
+      font-size: 1rem;
+      line-height: 1;
     }
     
-    .badge-warning {
-      background: var(--color-background-warning);
-      color: var(--color-text-warning);
-    }
-    
-    .badge-danger {
-      background: var(--color-background-danger);
-      color: var(--color-text-danger);
+    .tag-remove:hover {
+      opacity: 1;
     }
     
     /* ============================================
-       GRID LAYOUTS
+       TEXT UTILITIES
+       ============================================ */
+    .text-sm { font-size: 0.875rem; }
+    .text-muted { color: var(--color-text-muted); }
+    .text-success { color: var(--color-text-success); }
+    .text-warning { color: var(--color-text-warning); }
+    .text-danger { color: var(--color-text-danger); }
+    .font-medium { font-weight: 500; }
+    
+    /* Hidden utility */
+    .hidden { display: none !important; }
+    .font-mono { font-family: var(--font-mono); }
+    
+    /* ============================================
+       GRID UTILITIES
        ============================================ */
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      gap: var(--space-lg);
     }
     
-    .grid-4 {
+    .grid-3 {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
     }
     
     @media (max-width: 768px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
     }
     
     /* ============================================
-       UPLOAD AREA
+       DATASET CARDS
        ============================================ */
-    .upload-area {
-      border: 2px dashed var(--color-border-tertiary);
-      border-radius: var(--border-radius-lg);
-      padding: 3rem 2rem;
-      text-align: center;
-      background: var(--color-background-secondary);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    .upload-area:hover {
-      border-color: var(--color-border-secondary);
-      background: var(--color-background-tertiary);
-    }
-    
-    .upload-area input[type="file"] {
-      display: none;
-    }
-    
-    /* ============================================
-       DATASET LIST
-       ============================================ */
-    .dataset-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.25rem;
+    .dataset-card {
       background: var(--color-background-primary);
       border: 1px solid var(--color-border-tertiary);
-      border-radius: var(--border-radius-lg);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .dataset-card:hover {
+      border-color: var(--color-accent-primary);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .dataset-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-sm);
+    }
+    
+    .dataset-card-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    
+    .dataset-card-meta {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* ============================================
+       METRICS
+       ============================================ */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .metric-card {
+      background: var(--gradient-subtle);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-xs);
+    }
+    
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-accent-primary);
+    }
+    
+    /* ============================================
+       UPLOAD ZONE
+       ============================================ */
+    .upload-zone {
+      border: 2px dashed var(--color-border-strong);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
-      margin-bottom: 0.75rem;
+      background: var(--color-background-secondary);
     }
     
-    .dataset-item:hover {
-      border-color: var(--color-border-secondary);
-      box-shadow: var(--shadow-sm);
+    .upload-zone:hover {
+      border-color: var(--color-accent-primary);
+      background: var(--gradient-subtle);
     }
     
-    .dataset-info h3 {
-      font-size: 1rem;
+    .upload-zone-icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+    }
+    
+    .upload-zone-text {
+      font-size: 1.1rem;
       font-weight: 500;
-      margin-bottom: 4px;
+      margin-bottom: var(--space-sm);
     }
     
-    .dataset-meta {
-      font-size: 0.85rem;
-      color: var(--color-text-secondary);
+    .upload-zone-hint {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
     }
     
     /* ============================================
@@ -423,99 +1167,189 @@
        ============================================ */
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      padding: 14px 24px;
-      border-radius: var(--border-radius-md);
-      font-size: 0.9rem;
-      font-weight: 500;
-      z-index: 1000;
+      bottom: var(--space-xl);
+      right: var(--space-xl);
+      padding: var(--space-md) var(--space-xl);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 10000;
       animation: slideIn 0.3s ease;
+      max-width: 400px;
     }
+    
+    .toast-success { border-left: 4px solid var(--color-accent-success); }
+    .toast-error { border-left: 4px solid var(--color-accent-danger); }
+    .toast-warning { border-left: 4px solid var(--color-accent-warning); }
+    .toast-info { border-left: 4px solid var(--color-accent-primary); }
     
     @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-    
-    .toast-info {
-      background: var(--color-background-info);
-      color: var(--color-text-info);
-    }
-    
-    .toast-success {
-      background: var(--color-background-success);
-      color: var(--color-text-success);
-    }
-    
-    .toast-warning {
-      background: var(--color-background-warning);
-      color: var(--color-text-warning);
-    }
-    
-    .toast-error {
-      background: var(--color-background-danger);
-      color: var(--color-text-danger);
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
     
     /* ============================================
        CHART CONTAINER
        ============================================ */
     .chart-container {
+      height: 200px;
       position: relative;
-      height: 220px;
-      margin-top: 1rem;
     }
     
     /* ============================================
-       UTILITIES
+       AUGMENT LOG
        ============================================ */
-    .text-muted { color: var(--color-text-secondary); }
-    .text-success { color: var(--color-text-success); }
-    .text-warning { color: var(--color-text-warning); }
-    .text-danger { color: var(--color-text-danger); }
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
-    .text-sm { font-size: 0.85rem; }
-    .text-xs { font-size: 0.75rem; }
-    .font-medium { font-weight: 500; }
-    .mb-1 { margin-bottom: 0.5rem; }
-    .mb-2 { margin-bottom: 1rem; }
-    .mb-3 { margin-bottom: 1.5rem; }
-    .mt-2 { margin-top: 1rem; }
-    .mt-3 { margin-top: 1.5rem; }
-    .flex { display: flex; }
-    .items-center { align-items: center; }
-    .justify-between { justify-content: space-between; }
-    .gap-2 { gap: 0.5rem; }
-    .gap-3 { gap: 1rem; }
-    .hidden { display: none; }
+    .augment-log {
+      background: var(--color-background-secondary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .augment-log-entry {
+      padding: var(--space-xs) 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .augment-log-entry:last-child {
+      border-bottom: none;
+    }
+    
+    /* ============================================
+       SCHEMA PRESETS
+       ============================================ */
+    .preset-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .preset-btn {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-background-secondary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .preset-btn:hover {
+      background: var(--gradient-subtle);
+      border-color: var(--color-accent-primary);
+    }
+    
+    /* ============================================
+       DROPDOWN MENU
+       ============================================ */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      min-width: 180px;
+      z-index: 100;
+      overflow: hidden;
+    }
+    
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--color-text-primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .dropdown-item:hover {
+      background: var(--color-bg-hover);
+    }
+    
+    .dropdown-divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: var(--space-xs) 0;
+    }
+    
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      .site-nav-inner {
+        padding: 0 var(--space-md);
+      }
+      
+      .site-nav-links {
+        display: none;
+      }
+      
+      .hero {
+        padding: calc(64px + var(--space-xl)) var(--space-md) var(--space-xl);
+      }
+      
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-description {
+        font-size: 1rem;
+      }
+      
+      .features, .comparison, .guide {
+        padding-left: var(--space-md);
+        padding-right: var(--space-md);
+      }
+      
+      .tool-section {
+        padding-left: var(--space-md);
+        padding-right: var(--space-md);
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <header class="app-header">
-      <h1>📚 Dataset Metadata Augmenter</h1>
-      <p>AI-powered metadata enrichment for research datasets from government and open data platforms</p>
-    </header>
-    
-    <div id="app">
-      <!-- App renders here -->
+  <!-- Site Navigation -->
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a href="#" class="site-logo" onclick="App.showPage('home'); return false;">
+        <span class="site-logo-icon">📊</span>
+        <span>Dataset Metadata Augmenter</span>
+      </a>
+      <div class="site-nav-links">
+        <a href="#" class="site-nav-link" onclick="App.showPage('home'); return false;">Home</a>
+        <a href="#" class="site-nav-link" onclick="App.showPage('guide'); return false;">Guide</a>
+        <a href="https://github.com/aak105/Dataset-Metadata-Enricher" target="_blank" class="site-nav-link">GitHub ↗</a>
+        <button class="theme-toggle" onclick="App.toggleTheme()" title="Toggle light/dark theme">
+          <span class="theme-icon-light">☀️</span>
+          <span class="theme-icon-dark">🌙</span>
+        </button>
+        <a href="#" class="site-nav-cta" onclick="App.showPage('tool'); return false;">Open Tool →</a>
+      </div>
     </div>
-    
-    <footer style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border-tertiary); text-align: center;">
-      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">
-        Built by <a href="https://www.linkedin.com/in/aakashsharma8a6888131/" target="_blank" rel="noopener" style="color: var(--color-text-info); text-decoration: none;">Aakash Sharma</a> · 
-        <a href="https://github.com/aakashsharma8a6888131/Dataset-Metadata-Augmenter" target="_blank" rel="noopener" style="color: var(--color-text-secondary); text-decoration: none;">GitHub</a> · 
-        MIT License
-      </p>
-    </footer>
+  </nav>
+
+  <!-- Page Container -->
+  <div id="page-container">
+    <!-- Content rendered by JavaScript -->
   </div>
   
   <!-- Chart.js for statistics visualization -->
@@ -530,17 +1364,429 @@
   <script>
 /**
  * ============================================
- * DATASET METADATA AUGMENTER
+ * DATASET METADATA AUGMENTER v2.0
  * ============================================
  * A client-side application for cataloging and enriching
  * research datasets with AI-powered metadata extraction.
  * 
  * Author: Aakash Sharma (https://www.linkedin.com/in/aakashsharma8a6888131/)
  * License: MIT
- * Repository: https://github.com/aakashsharma8a6888131/Dataset-Metadata-Augmenter
+ * Repository: https://github.com/aak105/Dataset-Metadata-Enricher
  */
 
 const App = (() => {
+  // ============================================
+  // PAGE STATE (for site navigation)
+  // ============================================
+  let currentPage = 'home'; // 'home' | 'guide' | 'tool'
+  
+  // ============================================
+  // LANDING PAGE CONTENT
+  // ============================================
+  
+  const renderHomePage = () => {
+    return `
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span>Open Source · MIT License</span>
+          </div>
+          <h1 class="hero-title">
+            <span class="hero-title-gradient">AI-Powered</span> Dataset<br>Metadata Generation
+          </h1>
+          <p class="hero-description">
+            Transform undocumented datasets into well-cataloged data assets. 
+            Uses LLMs to auto-generate metadata following World Bank standards, 
+            with OpenMetadata integration for enterprise catalogs.
+          </p>
+          <div class="hero-actions">
+            <a href="#" class="btn btn-primary" onclick="App.showPage('tool'); return false;">
+              Open Tool →
+            </a>
+            <a href="#" class="btn btn-secondary" onclick="App.showPage('guide'); return false;">
+              Read the Guide
+            </a>
+          </div>
+          <div class="hero-links">
+            <a href="https://github.com/aak105/Dataset-Metadata-Enricher" target="_blank" class="hero-link">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/aakashsharma8a6888131/" target="_blank" class="hero-link">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              Author
+            </a>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Features Section -->
+      <section class="features">
+        <div class="section-header">
+          <h2 class="section-title">Built for Data Practitioners</h2>
+          <p class="section-description">
+            Everything you need to document research datasets from government portals, surveys, and open data platforms.
+          </p>
+        </div>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3 class="feature-title">Multi-Provider LLM Support</h3>
+            <p class="feature-description">
+              Works with Anthropic Claude, OpenAI GPT, Google Gemini, Mistral, Perplexity, and local models via Ollama or LM Studio.
+            </p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3 class="feature-title">World Bank Standards</h3>
+            <p class="feature-description">
+              Pre-built schema presets for DDI 2.5 (microdata), timeseries, documents, tables, ISO 19115 geospatial, and Ashoka Datalake metadata.
+            </p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <h3 class="feature-title">OpenMetadata Integration</h3>
+            <p class="feature-description">
+              Push enriched metadata directly to your OpenMetadata catalog. Create services, databases, and tables via API.
+            </p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Full Data Statistics</h3>
+            <p class="feature-description">
+              Scans entire dataset for time ranges, geographic coverage, categorical distributions, and numeric ranges.
+            </p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3 class="feature-title">Web Search Enhancement</h3>
+            <p class="feature-description">
+              Optionally fetch source URLs to extract methodology, licensing, and context from original data portals.
+            </p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3 class="feature-title">Privacy-First</h3>
+            <p class="feature-description">
+              Runs entirely in your browser. Data never leaves your machine unless you choose to call an LLM API.
+            </p>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Comparison Section -->
+      <section class="comparison">
+        <div class="section-header">
+          <h2 class="section-title">Why This Tool?</h2>
+          <p class="section-description">
+            Manual metadata creation is tedious. LLMs can help, but need structure.
+          </p>
+        </div>
+        
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Approach</th>
+              <th>Time per Dataset</th>
+              <th>Consistency</th>
+              <th>Standards</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Manual documentation</td>
+              <td>30-60 min</td>
+              <td>Variable</td>
+              <td>Often ad-hoc</td>
+            </tr>
+            <tr>
+              <td>Generic LLM prompting</td>
+              <td>10-15 min</td>
+              <td>Inconsistent</td>
+              <td>No schema</td>
+            </tr>
+            <tr class="highlight">
+              <td><strong>This Tool</strong></td>
+              <td><strong>2-5 min</strong></td>
+              <td><strong>Structured</strong></td>
+              <td><strong>World Bank / IHSN</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      
+      <!-- CTA Section -->
+      <section class="features" style="text-align: center; padding-bottom: 4rem;">
+        <h2 class="section-title">Ready to Get Started?</h2>
+        <p class="section-description" style="margin-bottom: 2rem;">
+          Upload a CSV or Excel file, configure your LLM provider, and generate metadata in minutes.
+        </p>
+        <a href="#" class="btn btn-primary" onclick="App.showPage('tool'); return false;">
+          Open the Tool →
+        </a>
+      </section>
+      
+      <!-- Footer -->
+      <footer class="site-footer">
+        <p>
+          Built by <a href="https://www.linkedin.com/in/aakashsharma8a6888131/" target="_blank">Aakash Sharma</a> · 
+          <a href="https://github.com/aak105/Dataset-Metadata-Enricher" target="_blank">GitHub</a> · 
+          MIT License
+        </p>
+      </footer>
+    `;
+  };
+  
+  const renderGuidePage = () => {
+    return `
+      <section class="guide">
+        <h1>Getting Started Guide</h1>
+        <p>
+          This guide walks you through using the Dataset Metadata Augmenter to document your research datasets.
+        </p>
+        
+        <h2>Quick Start</h2>
+        
+        <div class="guide-step">
+          <div class="guide-step-number">1</div>
+          <div class="guide-step-content">
+            <h4>Configure your LLM Provider</h4>
+            <p>Go to Settings tab and enter your API key for Anthropic, OpenAI, Google, Mistral, or Perplexity. For local models, select "Custom / Local Model" and configure your Ollama or LM Studio endpoint.</p>
+          </div>
+        </div>
+        
+        <div class="guide-step">
+          <div class="guide-step-number">2</div>
+          <div class="guide-step-content">
+            <h4>Choose a Metadata Schema</h4>
+            <p>Go to Schema tab and select a preset (Microdata DDI, Timeseries, Document, Table, or Geospatial) or customize fields for your use case.</p>
+          </div>
+        </div>
+        
+        <div class="guide-step">
+          <div class="guide-step-number">3</div>
+          <div class="guide-step-content">
+            <h4>Upload Your Dataset</h4>
+            <p>In the Datasets tab, drag and drop a CSV or Excel file. The tool will show a preview and compute statistics about your data.</p>
+          </div>
+        </div>
+        
+        <div class="guide-step">
+          <div class="guide-step-number">4</div>
+          <div class="guide-step-content">
+            <h4>Add Source URL (Optional)</h4>
+            <p>If your data comes from a portal like data.gov.in or MoSPI, paste the URL and click "Fetch". The tool will extract context to help the LLM generate better metadata.</p>
+          </div>
+        </div>
+        
+        <div class="guide-step">
+          <div class="guide-step-number">5</div>
+          <div class="guide-step-content">
+            <h4>Generate Metadata</h4>
+            <p>Click "Augment with AI" to have the LLM fill in all metadata fields. You can also click the ✨ button next to individual fields to regenerate specific entries.</p>
+          </div>
+        </div>
+        
+        <div class="guide-step">
+          <div class="guide-step-number">6</div>
+          <div class="guide-step-content">
+            <h4>Export or Push to Catalog</h4>
+            <p>Export your metadata as CSV, Excel, or JSON. Or push directly to OpenMetadata if you have it configured.</p>
+          </div>
+        </div>
+        
+        <h2>Schema Presets</h2>
+        
+        <h3>Microdata (DDI 2.5)</h3>
+        <p>For survey data like NSSO, NFHS, Census microdata. Includes 31 fields covering study description, methodology, sampling, access conditions, and variable documentation.</p>
+        
+        <h3>Document</h3>
+        <p>For reports, publications, and policy documents. Based on Dublin Core with 33 fields for bibliographic metadata.</p>
+        
+        <h3>Timeseries</h3>
+        <p>For economic indicators, time-indexed statistics. Includes 33 fields for frequency, aggregation methods, base periods, and seasonal adjustment.</p>
+        
+        <h3>Table</h3>
+        <p>For statistical tables and cross-tabulations. 30 fields describing table structure, row/column definitions, and statistical measures.</p>
+        
+        <h3>Geospatial (ISO 19115)</h3>
+        <p>For GIS data, maps, satellite imagery. 40 fields including bounding box coordinates, spatial reference systems, and resolution metadata.</p>
+        
+        <h3>Ashoka Datalake</h3>
+        <p>For social sector datasets in India. 18 fields designed for the Ashoka University Social Datalake Project, covering domain/cluster, spatial and temporal coverage, methodology, and data quality notes.</p>
+        
+        <h2>OpenMetadata Integration</h2>
+        
+        <h3>Setup</h3>
+        <ol>
+          <li>Install OpenMetadata via Docker (version 1.3.8+ recommended)</li>
+          <li>Get your JWT token from: Settings → Bots → ingestion-bot → Copy Token</li>
+          <li>In the tool's Settings tab, enter your OpenMetadata URL and JWT token</li>
+          <li>Run the Python CORS proxy: <code>python server.py</code></li>
+        </ol>
+        
+        <h3>Pushing Datasets</h3>
+        <p>After enriching a dataset, click "Push to OpenMetadata". The tool will:</p>
+        <ol>
+          <li>Create a DatabaseService (if not exists)</li>
+          <li>Create a Database (if not exists)</li>
+          <li>Create the Table with columns and metadata</li>
+        </ol>
+        
+        <h2>Local LLM Setup</h2>
+        
+        <h3>Using Ollama</h3>
+        <pre><code># Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Pull a model
+ollama pull llama3
+
+# Ollama runs at http://localhost:11434 by default</code></pre>
+        
+        <p>In the tool, select "Custom / Local Model" and use endpoint: <code>http://localhost:11434/v1/chat/completions</code></p>
+        
+        <h3>Using LM Studio</h3>
+        <p>Download LM Studio, load a model, start the local server (default port 1234), then configure the tool with endpoint: <code>http://localhost:1234/v1/chat/completions</code></p>
+        
+        <h2>Tips for Best Results</h2>
+        <ul>
+          <li><strong>Include the source URL</strong> — The LLM can extract methodology and context from the original portal</li>
+          <li><strong>Use descriptive filenames</strong> — The filename is used as a hint for the dataset title</li>
+          <li><strong>Review and edit</strong> — AI-generated metadata is a starting point; always verify accuracy</li>
+          <li><strong>Use larger models for complex datasets</strong> — Claude Opus or GPT-4 produce better results than smaller models</li>
+        </ul>
+        
+        <h2>Quality Scoring System</h2>
+        
+        <p>The tool uses a two-agent approach to ensure metadata quality:</p>
+        <ol>
+          <li><strong>Proponent Agent</strong> — Generates metadata values based on dataset context</li>
+          <li><strong>Judge Agent</strong> — Evaluates each field using a quality rubric (0-10 scale)</li>
+        </ol>
+        
+        <p>After generation, you can review scores, edit the judge's feedback, and regenerate low-scoring fields (up to 3 attempts per field).</p>
+        
+        <h3>Quality Rubric</h3>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <thead>
+              <tr style="background: var(--color-background-secondary);">
+                <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--color-border);">Score</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--color-border);">Rating</th>
+                <th style="padding: 12px; text-align: left; border-bottom: 2px solid var(--color-border);">Criteria</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><span style="color: var(--color-accent-success); font-weight: 600;">9-10</span></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><strong>🟢 Excellent</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);">Clear, precise, and contextually relevant. Focused and specific, avoiding unnecessary breadth. Highly usable and aligned with metadata standards.</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><span style="color: var(--color-accent-success); font-weight: 600;">7-8</span></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><strong>🟢 Good</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);">Mostly clear and accurate, contextually relevant and specific. Minor issues in precision or technical accuracy. Remains usable and aligned with standards.</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><span style="color: var(--color-accent-warning); font-weight: 600;">5-6</span></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><strong>🟡 Satisfactory</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);">Generally understandable but may lack precision or specificity. May include some broad statements, reducing effectiveness. Generally relevant and technically accurate.</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><span style="color: var(--color-accent-danger); font-weight: 600;">3-4</span></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><strong>🔴 Needs Improvement</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);">Lacks clarity, specificity, or relevance. May be broad, general, or technically inaccurate. Limited usability and alignment with standards.</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><span style="color: var(--color-accent-danger); font-weight: 600;">0-2</span></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);"><strong>🔴 Poor</strong></td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--color-border-tertiary);">Unclear, overly broad, or irrelevant to context. May contain significant inaccuracies, misuse of terminology, or be unusable for practical purposes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <h3>Working with Feedback</h3>
+        <p>For fields scoring below 7, the tool shows the judge's feedback with three options:</p>
+        <ul>
+          <li><strong>✓ Accept Current</strong> — Accept the value as-is (sets score to 10)</li>
+          <li><strong>♻️ Regenerate</strong> — Regenerate the field using the feedback (you can edit the feedback first)</li>
+          <li><strong>✕ Dismiss</strong> — Hide the feedback panel without changing the value</li>
+        </ul>
+        
+        <div style="margin-top: 3rem; text-align: center;">
+          <a href="#" class="btn btn-primary" onclick="App.showPage('tool'); return false;">
+            Open the Tool →
+          </a>
+        </div>
+      </section>
+      
+      <!-- Footer -->
+      <footer class="site-footer">
+        <p>
+          Built by <a href="https://www.linkedin.com/in/aakashsharma8a6888131/" target="_blank">Aakash Sharma</a> · 
+          <a href="https://github.com/aak105/Dataset-Metadata-Enricher" target="_blank">GitHub</a> · 
+          MIT License
+        </p>
+      </footer>
+    `;
+  };
+  
+  const renderToolPage = () => {
+    return `
+      <section class="tool-section">
+        <div class="app-container">
+          <div id="app">
+            <!-- Tool renders here -->
+          </div>
+        </div>
+      </section>
+      
+      <!-- Footer -->
+      <footer class="site-footer">
+        <p>
+          Built by <a href="https://www.linkedin.com/in/aakashsharma8a6888131/" target="_blank">Aakash Sharma</a> · 
+          <a href="https://github.com/aak105/Dataset-Metadata-Enricher" target="_blank">GitHub</a> · 
+          MIT License
+        </p>
+      </footer>
+    `;
+  };
+  
+  const renderPage = () => {
+    const container = document.getElementById('page-container');
+    
+    // Update nav active states
+    document.querySelectorAll('.site-nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    
+    if (currentPage === 'home') {
+      container.innerHTML = renderHomePage();
+      document.querySelector('.site-nav-link[onclick*="home"]')?.classList.add('active');
+    } else if (currentPage === 'guide') {
+      container.innerHTML = renderGuidePage();
+      document.querySelector('.site-nav-link[onclick*="guide"]')?.classList.add('active');
+    } else if (currentPage === 'tool') {
+      container.innerHTML = renderToolPage();
+      // Now render the actual tool inside #app
+      render();
+    }
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+  };
+
   // ============================================
   // STATE MANAGEMENT
   // ============================================
@@ -550,7 +1796,16 @@ const App = (() => {
    * Persisted to localStorage for session continuity
    */
   let state = {
-    view: 'datasets',           // Current view: 'datasets' | 'schema' | 'settings'
+    view: 'datasets',           // Current view: 'datasets' | 'browse' | 'schema' | 'settings'
+    
+    // Browse Catalog state
+    browseState: {
+      tables: [],               // Fetched tables from OpenMetadata
+      loading: false,
+      searchQuery: '',
+      error: null,
+      loadedOnce: false
+    },
     
     // LLM Configuration
     settings: {
@@ -625,6 +1880,36 @@ const App = (() => {
           ],
           endpoint: 'https://api.perplexity.ai/chat/completions',
           webSearch: true
+        },
+        groq: { 
+          name: 'Groq (Fast & Free)',
+          models: [
+            'llama-3.3-70b-versatile',
+            'llama-3.1-8b-instant',
+            'llama3-70b-8192',
+            'llama3-8b-8192',
+            'mixtral-8x7b-32768',
+            'gemma2-9b-it'
+          ],
+          endpoint: 'https://api.groq.com/openai/v1/chat/completions'
+        },
+        openrouter: {
+          name: 'OpenRouter (300+ models)',
+          models: [
+            'meta-llama/llama-3.3-70b-instruct:free',
+            'deepseek/deepseek-v4-flash:free',
+            'openai/gpt-oss-120b:free',
+            'openai/gpt-oss-20b:free',
+            'meta-llama/llama-4-maverick:free',
+            'meta-llama/llama-4-scout:free',
+            'google/gemini-2.0-flash-exp:free',
+            'nvidia/llama-3.1-nemotron-70b:free',
+            'anthropic/claude-sonnet-4-6',
+            'openai/gpt-5.4',
+            'google/gemini-3.1-pro',
+            'deepseek/deepseek-v4-flash'
+          ],
+          endpoint: 'https://openrouter.ai/api/v1/chat/completions'
         },
         custom: {
           name: 'Custom / Local Model',
@@ -727,7 +2012,19 @@ const App = (() => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.settings) {
-          state.settings = { ...state.settings, ...parsed.settings };
+          // Preserve the fresh `providers` object from the file — don't let old
+          // localStorage overwrite it (that would hide any new providers added
+          // in a code update, like Groq or OpenRouter).
+          const freshProviders = state.settings.providers;
+          const savedSettings = { ...parsed.settings };
+          delete savedSettings.providers;  // never load providers from storage
+          state.settings = { ...state.settings, ...savedSettings, providers: freshProviders };
+          
+          // If the saved provider no longer exists in fresh providers, fall back
+          if (!freshProviders[state.settings.provider]) {
+            state.settings.provider = 'anthropic';
+            state.settings.model = freshProviders.anthropic.models[0];
+          }
         }
         if (parsed.schema) {
           state.schema = parsed.schema;
@@ -968,16 +2265,9 @@ const App = (() => {
   
   /**
    * List of CORS proxies to try (in order)
+   * Note: corsproxy.io was removed in v2.1.1 — it blocks HTML content and serves ads instead
    */
   const CORS_PROXIES = [
-    {
-      name: 'corsproxy.io',
-      buildUrl: (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-      parseResponse: async (response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.text();
-      }
-    },
     {
       name: 'allorigins.win',
       buildUrl: (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
@@ -989,8 +2279,24 @@ const App = (() => {
       }
     },
     {
-      name: 'corsproxy.org',
-      buildUrl: (url) => `https://corsproxy.org/?${encodeURIComponent(url)}`,
+      name: 'allorigins.win (raw)',
+      buildUrl: (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      parseResponse: async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      }
+    },
+    {
+      name: 'cors.sh',
+      buildUrl: (url) => `https://proxy.cors.sh/${url}`,
+      parseResponse: async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.text();
+      }
+    },
+    {
+      name: 'thingproxy',
+      buildUrl: (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
       parseResponse: async (response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return await response.text();
@@ -1007,6 +2313,50 @@ const App = (() => {
   ];
   
   /**
+   * Validate that the fetched HTML actually corresponds to the requested URL.
+   * Detects when CORS proxies return ad pages or unrelated content.
+   */
+  const validateProxyResponse = (html, requestedUrl) => {
+    if (!html || html.length < 100) {
+      return { valid: false, reason: 'Response too short' };
+    }
+    if (!html.includes('<')) {
+      return { valid: false, reason: 'Not HTML' };
+    }
+    
+    // Detect known ad/proxy hijack patterns
+    const hijackPatterns = [
+      /hidemy\.name/i,
+      /vpn service for secure/i,
+      /protect your devices and gain access/i,
+      /Round-the-clock customer support/i,
+      /<title>[^<]*vpn[^<]*<\/title>/i,
+      /buy.{0,20}proxy/i
+    ];
+    
+    for (const pattern of hijackPatterns) {
+      if (pattern.test(html)) {
+        return { valid: false, reason: 'Proxy returned ad/VPN page instead of requested URL' };
+      }
+    }
+    
+    // Light hostname check — see if the response references the requested host
+    // (Only a heuristic; some legit pages may not. So we just warn, not block.)
+    try {
+      const requestedHost = new URL(requestedUrl).hostname.replace(/^www\./, '');
+      const hostInHtml = html.toLowerCase().includes(requestedHost.toLowerCase());
+      if (!hostInHtml && html.length < 5000) {
+        // Small response with no mention of requested host = suspicious
+        return { valid: false, reason: `Response does not reference requested host: ${requestedHost}` };
+      }
+    } catch (e) {
+      // Skip hostname check if URL parsing fails
+    }
+    
+    return { valid: true };
+  };
+  
+  /**
    * Fetch webpage content via CORS proxy with automatic fallback
    */
   const fetchUrlContent = async (url) => {
@@ -1018,7 +2368,7 @@ const App = (() => {
         const proxyUrl = proxy.buildUrl(url);
         
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
         
         const response = await fetch(proxyUrl, { 
           signal: controller.signal,
@@ -1031,9 +2381,10 @@ const App = (() => {
         
         const html = await proxy.parseResponse(response);
         
-        // Validate we got actual HTML content
-        if (!html || html.length < 100 || !html.includes('<')) {
-          throw new Error('Invalid HTML response');
+        // Validate response is actually from the requested URL (not hijacked)
+        const validation = validateProxyResponse(html, url);
+        if (!validation.valid) {
+          throw new Error(validation.reason);
         }
         
         console.log(`Success with proxy: ${proxy.name}`);
@@ -1416,6 +2767,37 @@ const App = (() => {
         };
         break;
       
+      case 'groq':
+        endpoint = providerConfig.endpoint;
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        };
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.3,
+          max_tokens: 4096
+        };
+        break;
+      
+      case 'openrouter':
+        endpoint = providerConfig.endpoint;
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          // OpenRouter recommends these optional headers for analytics
+          'HTTP-Referer': window.location.origin || 'https://aak105.github.io/Dataset-Metadata-Enricher',
+          'X-Title': 'Dataset Metadata Augmenter'
+        };
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.3,
+          max_tokens: 4096
+        };
+        break;
+      
       case 'custom':
         // Custom/Local model configuration
         const customConfig = providerConfig.customConfig;
@@ -1477,6 +2859,8 @@ const App = (() => {
       case 'openai':
       case 'mistral':
       case 'perplexity':
+      case 'groq':
+      case 'openrouter':
         return data.choices?.[0]?.message?.content || '';
       case 'openai_search':
         // OpenAI Responses API returns output array with message items
@@ -1507,6 +2891,122 @@ const App = (() => {
         }
       default:
         return '';
+    }
+  };
+  
+  /**
+   * Judge Agent: Score metadata quality using rubric
+   * Returns: { fieldName: { score: 0-10, feedback: "..." }, ... }
+   */
+  const judgeMetadataQuality = async (dataset, fieldsToJudge = null) => {
+    const metadata = dataset.metadata || {};
+    const fields = fieldsToJudge || Object.keys(metadata).filter(k => metadata[k]);
+    
+    if (fields.length === 0) {
+      return {};
+    }
+    
+    const fieldsList = fields.map(f => `- **${f}**: "${metadata[f]}"`).join('\n');
+    
+    const judgePrompt = `You are a strict metadata quality judge. Your task is to evaluate metadata values for accuracy, clarity, precision, and usefulness.
+
+## Quality Rubric (0-10 scale)
+
+**9-10 (Excellent):** Clear, precise, contextually relevant. Focused and specific, avoiding unnecessary breadth. Highly usable and aligned with standards.
+
+**7-8 (Good):** Mostly clear and accurate, contextually relevant and specific. Minor issues in precision or technical accuracy. Remains usable and aligned with standards.
+
+**5-6 (Satisfactory):** Generally understandable but may lack precision or specificity. May include some broad statements, reducing effectiveness. Generally relevant and technically accurate.
+
+**3-4 (Needs Improvement):** Lacks clarity, specificity, or relevance. May be broad, general, or technically inaccurate. Limited usability and alignment with standards.
+
+**0-2 (Poor):** Unclear, overly broad, or irrelevant to context. May contain significant inaccuracies, misuse of terminology, or be unusable for practical purposes.
+
+## Dataset Context
+
+**File name:** ${dataset.name}
+**Columns:** ${dataset.data?.headers?.slice(0, 15).join(', ') || 'Unknown'}
+**Row count:** ${dataset.data?.rows?.length || 0}
+${dataset.metadata?.['Source URL'] ? `**Source URL:** ${dataset.metadata['Source URL']}` : ''}
+
+## Metadata to Evaluate
+
+${fieldsList}
+
+## Task
+
+For EACH field above, provide:
+1. A score from 0-10 based on the rubric
+2. Brief feedback explaining the score and how to improve (if score < 9)
+
+Return ONLY valid JSON in this exact format:
+{
+  "Field Name 1": { "score": 8, "feedback": "Good clarity but could specify the exact year range." },
+  "Field Name 2": { "score": 5, "feedback": "Too vague. Add specific geographic regions and data variables." }
+}
+
+Be strict but fair. Most fields should score 5-8. Only truly excellent fields get 9-10. Only unusable fields get below 3.
+Return ONLY the JSON object, no markdown or explanation.`;
+
+    try {
+      const responseText = await callLLM(judgePrompt);
+      
+      // Extract JSON from response
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error('Could not parse Judge response as JSON');
+      }
+      
+      const scores = JSON.parse(jsonMatch[0]);
+      return scores;
+      
+    } catch (error) {
+      console.error('Judge error:', error);
+      return {};
+    }
+  };
+  
+  /**
+   * Regenerate a single field with feedback
+   */
+  const regenerateFieldWithFeedback = async (dataset, fieldName, feedback) => {
+    const field = state.schema.find(f => f.name === fieldName);
+    if (!field) return null;
+    
+    const currentValue = dataset.metadata?.[fieldName] || '';
+    const quality = dataset.quality?.[fieldName] || {};
+    
+    // Check max attempts
+    if ((quality.attempts || 0) >= 3) {
+      showToast(`Maximum attempts (3) reached for "${fieldName}"`, 'warning');
+      return null;
+    }
+    
+    const regeneratePrompt = `You are a data cataloger improving a metadata field based on feedback.
+
+## Dataset Context
+**File name:** ${dataset.name}
+**Columns:** ${dataset.data?.headers?.slice(0, 15).join(', ') || 'Unknown'}
+**Sample data:** ${dataset.data?.rows?.slice(0, 3).map(r => r.slice(0, 8).join(' | ')).join('\n') || 'None'}
+${dataset.metadata?.['Source URL'] ? `**Source URL:** ${dataset.metadata['Source URL']}` : ''}
+
+## Field to Improve
+**Field name:** ${fieldName}
+**Current value:** "${currentValue}"
+**Quality feedback:** ${feedback}
+
+## Task
+Generate an IMPROVED value for this field that addresses the feedback.
+Be specific, precise, and accurate. Use the dataset context to provide a better value.
+
+Return ONLY the improved value as a plain string (not JSON). No quotes, no explanation.`;
+
+    try {
+      const improvedValue = await callLLM(regeneratePrompt);
+      return improvedValue.trim().replace(/^["']|["']$/g, ''); // Remove any surrounding quotes
+    } catch (error) {
+      console.error('Regeneration error:', error);
+      return null;
     }
   };
   
@@ -1719,8 +3219,51 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       dataset.augmented = true;
       dataset.augmentedAt = new Date().toISOString();
       
-      state.augmentLog.push('✅ Metadata augmented successfully!');
-      showToast('Metadata augmented successfully!', 'success');
+      state.augmentLog.push('✅ Metadata generated!');
+      render();
+      
+      // ========================================
+      // JUDGE AGENT: Auto-score quality
+      // ========================================
+      state.augmentLog.push('⚖️ Judging metadata quality...');
+      render();
+      
+      try {
+        const qualityScores = await judgeMetadataQuality(dataset);
+        
+        // Store quality scores on dataset
+        dataset.quality = dataset.quality || {};
+        Object.entries(qualityScores).forEach(([fieldName, result]) => {
+          dataset.quality[fieldName] = {
+            score: result.score,
+            feedback: result.feedback,
+            attempts: 1,
+            judgedAt: new Date().toISOString()
+          };
+        });
+        
+        // Calculate overall score
+        const scores = Object.values(qualityScores).map(q => q.score).filter(s => typeof s === 'number');
+        const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 'N/A';
+        
+        state.augmentLog.push(`📊 Quality Score: ${avgScore}/10 (${scores.length} fields judged)`);
+        
+        // Count by category
+        const excellent = scores.filter(s => s >= 9).length;
+        const good = scores.filter(s => s >= 7 && s < 9).length;
+        const satisfactory = scores.filter(s => s >= 5 && s < 7).length;
+        const needsWork = scores.filter(s => s < 5).length;
+        
+        if (needsWork > 0) {
+          state.augmentLog.push(`⚠️ ${needsWork} field(s) need improvement`);
+        }
+        
+      } catch (judgeError) {
+        console.warn('Judge scoring failed:', judgeError);
+        state.augmentLog.push('⚠️ Quality scoring skipped (judge error)');
+      }
+      
+      showToast('Metadata augmented and scored!', 'success');
       saveState();
       
     } catch (error) {
@@ -2050,6 +3593,32 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       
       // -- Maintenance --
       { id: '40', name: 'maintenance_frequency', type: 'enum', options: ['continual', 'daily', 'weekly', 'fortnightly', 'monthly', 'quarterly', 'biannually', 'annually', 'asNeeded', 'irregular', 'notPlanned', 'unknown'], required: false, aiInfer: true, description: 'Update frequency' }
+    ],
+    
+    // ============================================
+    // 6. ASHOKA DATALAKE
+    // For: Social sector datasets in India
+    // Used by: Ashoka University Social Datalake Project
+    // ============================================
+    ashoka_datalake: [
+      { id: '1', name: 'Dataset Title', type: 'text', required: true, aiInfer: true, description: 'Official title of the dataset' },
+      { id: '2', name: 'Short Name', type: 'text', required: false, aiInfer: true, description: 'Abbreviated name or acronym' },
+      { id: '3', name: 'Description', type: 'longtext', required: true, aiInfer: true, description: 'Summary of dataset content, scope, and purpose' },
+      { id: '4', name: 'Domain/Cluster', type: 'text', required: false, aiInfer: true, description: 'Thematic domain (e.g., Health, Education, Agriculture, Livelihoods)' },
+      { id: '5', name: 'Publisher/Source', type: 'text', required: true, aiInfer: true, description: 'Organization that published or created the data' },
+      { id: '6', name: 'Source URL', type: 'url', required: false, aiInfer: false, description: 'Link to the original data source' },
+      { id: '7', name: 'Coverage (Spatial)', type: 'text', required: false, aiInfer: true, description: 'Geographic coverage (e.g., All India, State-level, District-level)' },
+      { id: '8', name: 'Coverage (Temporal)', type: 'text', required: false, aiInfer: true, description: 'Time period covered by the data' },
+      { id: '9', name: 'Frequency of Update', type: 'text', required: false, aiInfer: true, description: 'How often the data is updated (e.g., Annual, Monthly, One-time)' },
+      { id: '10', name: 'Format(s) Available', type: 'text', required: false, aiInfer: true, description: 'File formats available (e.g., CSV, Excel, API, PDF)' },
+      { id: '11', name: 'Variables/Indicators', type: 'longtext', required: false, aiInfer: true, description: 'Key variables or indicators in the dataset' },
+      { id: '12', name: 'Unit of Observation', type: 'text', required: false, aiInfer: true, description: 'Level of data (e.g., Individual, Household, Village, District, State)' },
+      { id: '13', name: 'Methodology Notes', type: 'longtext', required: false, aiInfer: true, description: 'Data collection methodology and sampling approach' },
+      { id: '14', name: 'Data Quality Notes', type: 'longtext', required: false, aiInfer: true, description: 'Known limitations, caveats, or quality issues' },
+      { id: '15', name: 'Licensing/Access', type: 'text', required: false, aiInfer: true, description: 'Access conditions and license type' },
+      { id: '16', name: 'Tags/Keywords', type: 'tags', required: false, aiInfer: true, description: 'Keywords for discovery' },
+      { id: '17', name: 'Related Datasets', type: 'text', required: false, aiInfer: true, description: 'Links to related or complementary datasets' },
+      { id: '18', name: 'Last Updated', type: 'date', required: false, aiInfer: false, description: 'When the dataset was last updated' }
     ]
   };
 
@@ -2065,6 +3634,10 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       <button class="nav-tab ${state.view === 'datasets' ? 'active' : ''}" 
               onclick="App.navigate('datasets')">
         📊 Datasets
+      </button>
+      <button class="nav-tab ${state.view === 'browse' ? 'active' : ''}" 
+              onclick="App.navigate('browse')">
+        🔗 Browse Catalog
       </button>
       <button class="nav-tab ${state.view === 'schema' ? 'active' : ''}" 
               onclick="App.navigate('schema')">
@@ -2292,6 +3865,132 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
   `;
   
   /**
+   * Render browse catalog view — browse tables from OpenMetadata
+   */
+  const renderBrowse = () => {
+    const { tables, loading, searchQuery, error, loadedOnce } = state.browseState;
+    const omConfigured = state.settings.openMetadata?.url && state.settings.openMetadata?.jwtToken;
+    
+    // Filter tables by search query
+    const filteredTables = searchQuery 
+      ? tables.filter(t => 
+          t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (t.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (t.fullyQualifiedName || '').toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : tables;
+    
+    return `
+      <div style="max-width: 1100px;">
+        <div class="flex justify-between items-center mb-3">
+          <div>
+            <h2 class="card-title" style="margin: 0;">Browse OpenMetadata Catalog</h2>
+            <p class="text-sm text-muted" style="margin: 4px 0 0 0;">
+              Browse tables from your OpenMetadata catalog. Load any table to generate metadata with AI.
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="App.fetchOpenMetadataTables()" 
+                    ${loading ? 'disabled' : ''}
+                    class="btn-primary">
+              ${loading ? '⏳ Loading...' : (loadedOnce ? '🔄 Refresh' : '📥 Load Tables')}
+            </button>
+          </div>
+        </div>
+        
+        ${!omConfigured ? `
+          <div class="card mb-3" style="background: var(--color-background-warning); border: 1px solid var(--color-accent-warning);">
+            <p class="font-medium" style="color: var(--color-text-warning); margin: 0 0 8px 0;">⚠️ OpenMetadata not configured</p>
+            <p class="text-sm" style="color: var(--color-text-warning); margin: 0 0 12px 0;">
+              Configure your OpenMetadata URL and JWT token in Settings before browsing.
+            </p>
+            <button onclick="App.navigate('settings')" class="btn-sm">Go to Settings →</button>
+          </div>
+        ` : ''}
+        
+        ${error ? `
+          <div class="card mb-3" style="background: var(--color-background-danger); border: 1px solid var(--color-accent-danger);">
+            <p class="font-medium" style="color: var(--color-text-danger); margin: 0 0 4px 0;">❌ Error loading tables</p>
+            <p class="text-sm" style="color: var(--color-text-danger); margin: 0; font-family: monospace;">${error}</p>
+          </div>
+        ` : ''}
+        
+        ${omConfigured && !loadedOnce && !loading ? `
+          <div class="card" style="text-align: center; padding: 48px 24px;">
+            <div style="font-size: 3rem; margin-bottom: 16px;">🔗</div>
+            <h3 style="margin: 0 0 8px 0;">Ready to Browse</h3>
+            <p class="text-muted" style="margin: 0 0 20px 0;">
+              Click "Load Tables" to fetch all tables from your OpenMetadata catalog.
+            </p>
+            <p class="text-sm text-muted" style="margin: 0;">
+              Connected to: <code>${state.settings.openMetadata.url}</code>
+            </p>
+          </div>
+        ` : ''}
+        
+        ${loadedOnce && tables.length > 0 ? `
+          <div class="card mb-3" style="padding: 16px;">
+            <div class="flex gap-2 items-center" style="flex-wrap: wrap;">
+              <input type="text" 
+                     placeholder="🔍 Search tables by name, description, or FQN..." 
+                     value="${searchQuery}"
+                     oninput="App.updateBrowseSearch(this.value)"
+                     style="flex: 1; min-width: 250px; padding: 8px 12px; border: 1px solid var(--color-border-tertiary); border-radius: var(--radius-sm); background: var(--color-background-primary);">
+              <span class="text-sm text-muted">
+                ${filteredTables.length} of ${tables.length} tables
+              </span>
+            </div>
+          </div>
+          
+          <div style="display: grid; gap: 12px;">
+            ${filteredTables.length === 0 ? `
+              <div class="card" style="text-align: center; padding: 32px;">
+                <p class="text-muted" style="margin: 0;">No tables match your search.</p>
+              </div>
+            ` : filteredTables.map(table => `
+              <div class="card" style="padding: 16px;">
+                <div class="flex justify-between items-start" style="gap: 12px;">
+                  <div style="flex: 1; min-width: 0;">
+                    <div class="flex items-center gap-2" style="margin-bottom: 6px;">
+                      <h4 style="margin: 0; font-size: 1rem;">📋 ${table.name}</h4>
+                      ${table.tableType ? `<span class="badge badge-info" style="font-size: 0.7rem;">${table.tableType}</span>` : ''}
+                      ${table.columns?.length ? `<span class="text-sm text-muted">${table.columns.length} columns</span>` : ''}
+                    </div>
+                    <p class="text-sm text-muted" style="margin: 0 0 8px 0; font-family: monospace; word-break: break-all;">
+                      ${table.fullyQualifiedName || ''}
+                    </p>
+                    ${table.description ? `
+                      <p class="text-sm" style="margin: 0; color: var(--color-text-secondary);">
+                        ${table.description.length > 200 ? table.description.slice(0, 200) + '...' : table.description}
+                      </p>
+                    ` : '<p class="text-sm text-muted" style="margin: 0; font-style: italic;">No description</p>'}
+                  </div>
+                  <div style="flex-shrink: 0;">
+                    <button onclick="App.loadTableFromOpenMetadata('${table.id}', '${(table.fullyQualifiedName || '').replace(/'/g, "\\'")}')"
+                            class="btn-primary btn-sm">
+                      Load →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+        
+        ${loadedOnce && tables.length === 0 && !loading ? `
+          <div class="card" style="text-align: center; padding: 48px 24px;">
+            <div style="font-size: 3rem; margin-bottom: 16px;">📭</div>
+            <h3 style="margin: 0 0 8px 0;">No tables found</h3>
+            <p class="text-muted" style="margin: 0;">
+              Your OpenMetadata catalog doesn't have any tables yet, or you may not have permissions to view them.
+            </p>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  };
+  
+  /**
    * Render schema builder view
    */
   const renderSchema = () => `
@@ -2397,6 +4096,7 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
           <button class="btn-sm" onclick="App.loadPreset('timeseries')" title="Time-based indicators, WDI-style data">📈 Timeseries</button>
           <button class="btn-sm" onclick="App.loadPreset('table')" title="Statistical tables, cross-tabulations">📋 Table</button>
           <button class="btn-sm" onclick="App.loadPreset('geospatial')" title="GIS data, maps, satellite imagery (ISO 19115)">🗺️ Geospatial</button>
+          <button class="btn-sm" onclick="App.loadPreset('ashoka_datalake')" title="Social sector datasets for India" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">🏛️ Ashoka Datalake</button>
         </div>
         
         <p class="text-sm text-muted" style="margin: 1rem 0 0 0; font-style: italic;">💡 Tip: Load a preset, customize it, then save as a custom schema for your workflow.</p>
@@ -2426,11 +4126,11 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
           <h2 class="card-title">Datasets (${state.datasets.length})</h2>
           <div class="flex gap-2">
             ${state.datasets.length > 0 ? `
-              <div style="position: relative; display: inline-block;">
-                <button onclick="this.nextElementSibling.classList.toggle('hidden')">
+              <div style="position: relative; display: inline-block;" data-dropdown>
+                <button onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden')">
                   📥 Export All ▾
                 </button>
-                <div class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 4px; background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); z-index: 100; min-width: 200px;">
+                <div class="dropdown-menu hidden" style="position: absolute; top: 100%; right: 0; margin-top: 4px; background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); z-index: 100; min-width: 200px;">
                   <button onclick="App.exportAllMetadataCSV(); this.parentElement.classList.add('hidden')" style="width: 100%; border: none; border-radius: 0; justify-content: flex-start; padding: 10px 14px;">
                     📄 All Metadata as CSV
                   </button>
@@ -2440,6 +4140,11 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
                 </div>
               </div>
             ` : ''}
+            <button onclick="App.navigate('browse')" 
+                    style="background: var(--color-background-secondary); color: var(--color-text-primary); border: 1px solid var(--color-border-tertiary);"
+                    title="Browse tables from OpenMetadata catalog">
+              🔗 Browse OpenMetadata
+            </button>
             <label style="cursor: pointer;">
               <input type="file" 
                      accept=".csv,.xlsx,.xls,.json,.txt,.tsv" 
@@ -2655,11 +4360,11 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
             <button onclick="App.augment('${dataset.id}')" ${state.augmenting ? 'disabled' : ''}>
               ${state.augmenting ? '⏳ Augmenting...' : '🤖 Augment with AI'}
             </button>
-            <div style="position: relative; display: inline-block;">
-              <button onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <div style="position: relative; display: inline-block;" data-dropdown>
+              <button onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden')">
                 📥 Export ▾
               </button>
-              <div class="hidden" style="position: absolute; top: 100%; right: 0; margin-top: 4px; background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); z-index: 100; min-width: 180px;">
+              <div class="dropdown-menu hidden" style="position: absolute; top: 100%; right: 0; margin-top: 4px; background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); box-shadow: var(--shadow-md); z-index: 100; min-width: 180px;">
                 <button onclick="App.exportMetadataCSV('${dataset.id}'); this.parentElement.classList.add('hidden')" style="width: 100%; border: none; border-radius: 0; justify-content: flex-start; padding: 10px 14px;">
                   📄 Metadata as CSV
                 </button>
@@ -2691,6 +4396,53 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
           </div>
         ` : ''}
         
+        ${(() => {
+          // Quality Summary Card
+          if (!dataset.quality || Object.keys(dataset.quality).length === 0) return '';
+          
+          const scores = Object.values(dataset.quality).map(q => q.score).filter(s => typeof s === 'number');
+          if (scores.length === 0) return '';
+          
+          const avgScore = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+          const excellent = scores.filter(s => s >= 9).length;
+          const good = scores.filter(s => s >= 7 && s < 9).length;
+          const satisfactory = scores.filter(s => s >= 5 && s < 7).length;
+          const needsWork = scores.filter(s => s < 5).length;
+          
+          const rating = avgScore >= 9 ? 'Excellent' : avgScore >= 7 ? 'Good' : avgScore >= 5 ? 'Satisfactory' : 'Needs Work';
+          const ratingColor = avgScore >= 7 ? 'var(--color-accent-success)' : avgScore >= 5 ? 'var(--color-accent-warning)' : 'var(--color-accent-danger)';
+          const percentage = Math.round(avgScore * 10);
+          
+          return `
+            <div class="card mb-3" style="background: var(--gradient-subtle); border: 1px solid var(--color-border);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div>
+                  <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px;">
+                    <span style="font-size: 1.5rem; font-weight: 700; color: ${ratingColor};">${avgScore}/10</span>
+                    <span style="font-size: 1rem; color: var(--color-text-secondary);">(${rating})</span>
+                  </div>
+                  <div style="width: 200px; height: 8px; background: var(--color-background-tertiary); border-radius: 4px; overflow: hidden;">
+                    <div style="width: ${percentage}%; height: 100%; background: ${ratingColor}; border-radius: 4px;"></div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 16px; font-size: 0.85rem;">
+                  ${excellent > 0 ? `<span>🟢 Excellent: ${excellent}</span>` : ''}
+                  ${good > 0 ? `<span>🟢 Good: ${good}</span>` : ''}
+                  ${satisfactory > 0 ? `<span>🟡 Satisfactory: ${satisfactory}</span>` : ''}
+                  ${needsWork > 0 ? `<span style="color: var(--color-accent-danger);">🔴 Needs work: ${needsWork}</span>` : ''}
+                </div>
+                <div>
+                  <button onclick="App.rejudgeAllFields('${dataset.id}')" 
+                          style="padding: 8px 16px; font-size: 0.85rem; background: var(--color-background-secondary); color: var(--color-text-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--radius-md); cursor: pointer;"
+                          ${state.augmenting ? 'disabled' : ''}>
+                    ⚖️ Re-Judge All
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        })()}
+        
         <div class="grid-2">
           <!-- Metadata Form -->
           <div>
@@ -2718,25 +4470,62 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
                 const isEmpty = !value || (Array.isArray(value) && value.length === 0);
                 const isInferring = state.inferringField === field.id;
                 const canInfer = field.aiInfer === true;
+                const quality = dataset.quality?.[field.name];
+                const hasScore = quality && typeof quality.score === 'number';
+                const scoreColor = hasScore ? (quality.score >= 9 ? 'var(--color-accent-success)' : quality.score >= 7 ? 'var(--color-accent-success)' : quality.score >= 5 ? 'var(--color-accent-warning)' : 'var(--color-accent-danger)') : '';
+                const scoreEmoji = hasScore ? (quality.score >= 9 ? '🟢' : quality.score >= 7 ? '🟢' : quality.score >= 5 ? '🟡' : '🔴') : '';
+                
                 return `
-                <div class="form-group" style="position: relative;">
+                <div class="form-group" style="position: relative; ${hasScore && quality.score < 7 ? 'border-left: 3px solid ' + scoreColor + '; padding-left: 12px;' : ''}">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <label style="margin-bottom: 0;">
+                    <label style="margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
                       ${field.name}
                       ${field.required ? '<span class="text-danger">*</span>' : ''}
                       ${isEmpty ? '<span class="badge badge-warning" style="margin-left: 6px;">Empty</span>' : ''}
+                      ${hasScore ? `<span style="font-size: 0.8rem; color: ${scoreColor}; font-weight: 600;">${scoreEmoji} ${quality.score}/10</span>` : ''}
                     </label>
-                    ${canInfer ? `
-                      <button class="btn-sm" 
-                              onclick="App.inferSingleField('${dataset.id}', '${field.id}')" 
-                              ${state.augmenting || isInferring ? 'disabled' : ''}
-                              style="padding: 4px 10px; font-size: 0.75rem; background: var(--color-background-info); color: var(--color-text-info); border: none;"
-                              title="Use AI to infer this field">
-                        ${isInferring ? '⏳ Inferring...' : '🤖 Infer'}
-                      </button>
-                    ` : ''}
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                      ${canInfer ? `
+                        <button class="btn-sm" 
+                                onclick="App.inferSingleField('${dataset.id}', '${field.id}')" 
+                                ${state.augmenting || isInferring ? 'disabled' : ''}
+                                style="padding: 4px 10px; font-size: 0.75rem; background: var(--color-background-info); color: var(--color-text-info); border: none;"
+                                title="Use AI to infer this field">
+                          ${isInferring ? '⏳ Inferring...' : '🤖 Infer'}
+                        </button>
+                      ` : ''}
+                    </div>
                   </div>
                   ${renderMetadataInput(dataset, field)}
+                  ${hasScore && quality.feedback && quality.score < 7 ? `
+                    <div style="margin-top: 8px; padding: 12px; background: var(--color-background-secondary); border-radius: var(--radius-sm); font-size: 0.85rem; border: 1px solid var(--color-border-tertiary);">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--color-text-muted); font-weight: 500;">💬 Judge Feedback:</span>
+                        <span style="color: var(--color-text-muted); font-size: 0.75rem;">Attempts: ${quality.attempts || 1}/3</span>
+                      </div>
+                      <textarea 
+                        id="feedback-${field.id}"
+                        style="width: 100%; min-height: 60px; padding: 8px; border: 1px solid var(--color-border-tertiary); border-radius: var(--radius-sm); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 0.85rem; resize: vertical; margin-bottom: 10px;"
+                        placeholder="Edit feedback before regenerating..."
+                      >${quality.feedback}</textarea>
+                      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button onclick="App.acceptCurrentValue('${dataset.id}', '${field.name}')"
+                                style="padding: 6px 14px; font-size: 0.8rem; background: var(--color-accent-success); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">
+                          ✓ Accept Current
+                        </button>
+                        ${(quality.attempts || 1) < 3 ? `
+                          <button onclick="App.regenerateWithFeedback('${dataset.id}', '${field.name}', document.getElementById('feedback-${field.id}').value)"
+                                  style="padding: 6px 14px; font-size: 0.8rem; background: var(--color-accent-primary); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">
+                            ♻️ Regenerate
+                          </button>
+                        ` : ''}
+                        <button onclick="App.dismissFeedback('${dataset.id}', '${field.name}')"
+                                style="padding: 6px 14px; font-size: 0.8rem; background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border-tertiary); border-radius: var(--radius-sm); cursor: pointer;">
+                          ✕ Dismiss
+                        </button>
+                      </div>
+                    </div>
+                  ` : ''}
                 </div>
               `}).join('')}
             </div>
@@ -2916,6 +4705,7 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       ${renderNav()}
       ${state.view === 'settings' ? renderSettings() : 
         state.view === 'schema' ? renderSchema() : 
+        state.view === 'browse' ? renderBrowse() :
         renderDatasets()}
       ${renderToast()}
     `;
@@ -2991,12 +4781,58 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
      * Initialize the application
      */
     init: () => {
+      // Load saved theme preference
+      const savedTheme = localStorage.getItem('dma-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        // Check if click is outside any dropdown
+        if (!e.target.closest('[data-dropdown]') && !e.target.closest('.dropdown-menu')) {
+          document.querySelectorAll('.dropdown-menu:not(.hidden)').forEach(menu => {
+            menu.classList.add('hidden');
+          });
+        }
+      });
+      
       loadState();
-      render();
+      renderPage(); // Start with home page
     },
     
     /**
-     * Navigate to a view
+     * Toggle between light and dark theme
+     */
+    toggleTheme: () => {
+      const root = document.documentElement;
+      const currentTheme = root.getAttribute('data-theme');
+      
+      let newTheme;
+      if (currentTheme === 'dark') {
+        newTheme = 'light';
+      } else if (currentTheme === 'light') {
+        newTheme = 'dark';
+      } else {
+        // No theme set, check system preference and toggle opposite
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        newTheme = prefersDark ? 'light' : 'dark';
+      }
+      
+      root.setAttribute('data-theme', newTheme);
+      localStorage.setItem('dma-theme', newTheme);
+    },
+    
+    /**
+     * Show a site page (home, guide, tool)
+     */
+    showPage: (page) => {
+      currentPage = page;
+      renderPage();
+    },
+    
+    /**
+     * Navigate to a tool view (datasets, schema, settings)
      */
     navigate: (view) => {
       state.view = view;
@@ -3323,6 +5159,163 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       }
     },
     
+    // ============================================
+    // BROWSE OPENMETADATA CATALOG
+    // ============================================
+    
+    /**
+     * Update browse search query
+     */
+    updateBrowseSearch: (query) => {
+      state.browseState.searchQuery = query;
+      render();
+    },
+    
+    /**
+     * Fetch tables from OpenMetadata
+     */
+    fetchOpenMetadataTables: async () => {
+      const { url, jwtToken } = state.settings.openMetadata || {};
+      
+      if (!url || !jwtToken) {
+        showToast('Please configure OpenMetadata in Settings first', 'error');
+        state.browseState.error = 'OpenMetadata URL and JWT token required';
+        render();
+        return;
+      }
+      
+      state.browseState.loading = true;
+      state.browseState.error = null;
+      render();
+      
+      try {
+        // Fetch tables with a large limit to get most/all tables
+        // Include fields we need for display
+        const endpoint = '/api/v1/tables?limit=500&fields=columns,description,tableType';
+        const response = await App._fetchOpenMetadata(endpoint);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText.slice(0, 200)}`);
+        }
+        
+        const data = await response.json();
+        const tables = data.data || [];
+        
+        state.browseState.tables = tables;
+        state.browseState.loadedOnce = true;
+        state.browseState.loading = false;
+        
+        showToast(`Loaded ${tables.length} tables from OpenMetadata`, 'success');
+        render();
+        
+      } catch (error) {
+        console.error('Failed to fetch tables:', error);
+        state.browseState.error = error.message;
+        state.browseState.loading = false;
+        showToast('Failed to load tables: ' + error.message, 'error');
+        render();
+      }
+    },
+    
+    /**
+     * Load a table from OpenMetadata as a dataset
+     */
+    loadTableFromOpenMetadata: async (tableId, fqn) => {
+      showToast(`Loading ${fqn}...`, 'info');
+      
+      try {
+        // Fetch full table details including columns
+        const tableResp = await App._fetchOpenMetadata(`/api/v1/tables/${tableId}?fields=columns,description,tableType,owner,tags,database,databaseSchema`);
+        
+        if (!tableResp.ok) {
+          throw new Error(`Failed to fetch table details: HTTP ${tableResp.status}`);
+        }
+        
+        const table = await tableResp.json();
+        
+        // Try to fetch sample data (may not be available for all tables)
+        let sampleRows = [];
+        let sampleCols = [];
+        
+        try {
+          const sampleResp = await App._fetchOpenMetadata(`/api/v1/tables/${tableId}/sampleData`);
+          if (sampleResp.ok) {
+            const sampleData = await sampleResp.json();
+            if (sampleData.sampleData) {
+              sampleCols = sampleData.sampleData.columns || [];
+              sampleRows = sampleData.sampleData.rows || [];
+            }
+          }
+        } catch (e) {
+          console.warn('No sample data available:', e.message);
+        }
+        
+        // Build headers from columns if no sample data
+        const headers = sampleCols.length > 0 
+          ? sampleCols 
+          : (table.columns || []).map(c => c.name);
+        
+        // Build dataset from table metadata
+        const dataset = {
+          id: generateId(),
+          name: table.name,
+          fileType: 'openmetadata',
+          source: 'openmetadata',
+          sourceFqn: table.fullyQualifiedName,
+          sourceId: table.id,
+          uploadedAt: new Date().toISOString(),
+          data: {
+            headers: headers,
+            rows: sampleRows,
+            rowCount: sampleRows.length,
+            columnInfo: (table.columns || []).map(c => ({
+              name: c.name,
+              dataType: c.dataType,
+              description: c.description || ''
+            }))
+          },
+          metadata: {
+            // Pre-populate known metadata from OpenMetadata
+            'Dataset Title': table.displayName || table.name,
+            'Description': table.description || '',
+            'Source URL': state.settings.openMetadata.url + '/table/' + encodeURIComponent(table.fullyQualifiedName)
+          },
+          augmented: false
+        };
+        
+        state.datasets.push(dataset);
+        saveState();
+        
+        showToast(`Loaded "${table.name}" — ${headers.length} columns, ${sampleRows.length} sample rows`, 'success');
+        
+        // Switch to datasets view and open the dataset
+        state.view = 'datasets';
+        state.currentDataset = dataset;
+        render();
+        
+      } catch (error) {
+        console.error('Load table error:', error);
+        showToast('Failed to load table: ' + error.message, 'error');
+      }
+    },
+    
+    /**
+     * Helper: fetch from OpenMetadata via proxy
+     */
+    _fetchOpenMetadata: async (endpoint, options = {}) => {
+      const { url, jwtToken } = state.settings.openMetadata;
+      const targetUrl = `${url}${endpoint}`;
+      const proxyUrl = `/proxy/${targetUrl}`;
+      
+      const headers = { ...options.headers };
+      if (jwtToken) {
+        headers['Authorization'] = `Bearer ${jwtToken}`;
+      }
+      
+      return fetch(proxyUrl, { ...options, headers });
+    },
+    
     /**
      * Push dataset to OpenMetadata
      */
@@ -3555,16 +5548,80 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
         try {
           const imported = JSON.parse(e.target.result);
           if (Array.isArray(imported)) {
-            state.schema = imported;
+            // Check the format and convert if needed
+            let convertedSchema;
+            
+            // Format 1: Already in correct format (has 'name' and 'type')
+            if (imported[0] && imported[0].name && imported[0].type) {
+              convertedSchema = imported;
+            }
+            // Format 2: Simple format with 'Field' and 'Description' (like Ashoka Datalake format)
+            else if (imported[0] && (imported[0].Field || imported[0].field)) {
+              convertedSchema = imported.map((item, index) => {
+                const fieldName = item.Field || item.field || item.name || `Field ${index + 1}`;
+                const description = item.Description || item.description || '';
+                
+                // Infer type from field name - keep it simple, mostly text
+                let fieldType = 'text';
+                const nameLower = fieldName.toLowerCase();
+                
+                if (nameLower.includes('url') || nameLower.includes('link')) {
+                  fieldType = 'url';
+                } else if (nameLower === 'last updated' || nameLower === 'date' || nameLower === 'last_updated') {
+                  // Only exact matches for date type
+                  fieldType = 'date';
+                } else if (nameLower.includes('description') || nameLower.includes('notes') || nameLower.includes('variables') || nameLower.includes('indicators') || nameLower.includes('quality')) {
+                  fieldType = 'longtext';
+                } else if (nameLower.includes('tag') || nameLower.includes('keyword')) {
+                  fieldType = 'tags';
+                }
+                // Note: NOT auto-detecting enum - let AI infer text values instead
+                
+                // Determine if required (title, source, publisher usually are)
+                const isRequired = nameLower.includes('title') || nameLower.includes('publisher') || nameLower.includes('source');
+                
+                // AI should infer almost all fields (except URL which user provides)
+                const aiInfer = !nameLower.includes('url') && !nameLower.includes('link');
+                
+                return {
+                  id: String(index + 1),
+                  name: fieldName,
+                  type: fieldType,
+                  required: isRequired,
+                  aiInfer: aiInfer,
+                  description: description
+                };
+              });
+            }
+            // Format 3: Just an array of field names (strings)
+            else if (typeof imported[0] === 'string') {
+              convertedSchema = imported.map((name, index) => ({
+                id: String(index + 1),
+                name: name,
+                type: 'text',
+                required: false,
+                aiInfer: true
+              }));
+            }
+            else {
+              throw new Error('Unrecognized schema format');
+            }
+            
+            state.schema = convertedSchema;
             saveState();
-            showToast('Schema imported successfully', 'success');
+            showToast(`Schema imported successfully (${convertedSchema.length} fields)`, 'success');
             render();
+          } else {
+            throw new Error('Schema must be an array');
           }
         } catch (error) {
-          showToast('Failed to import schema: Invalid JSON', 'error');
+          console.error('Import error:', error);
+          showToast('Failed to import schema: ' + error.message, 'error');
         }
       };
       reader.readAsText(file);
+      // Reset input so same file can be imported again
+      event.target.value = '';
     },
     
     // ============================================
@@ -3939,12 +5996,171 @@ ${isWebSearch ? '- Prioritize information from your web search results for accur
       }
     },
     
+    /**
+     * Regenerate a single field using judge feedback (or custom feedback)
+     */
+    regenerateWithFeedback: async (datasetId, fieldName, customFeedback = null) => {
+      const dataset = state.datasets.find(d => d.id === datasetId);
+      if (!dataset) return;
+      
+      const quality = dataset.quality?.[fieldName];
+      if (!quality) {
+        showToast('No feedback available for this field', 'error');
+        return;
+      }
+      
+      if ((quality.attempts || 1) >= 3) {
+        showToast('Maximum regeneration attempts (3) reached', 'warning');
+        return;
+      }
+      
+      state.augmenting = true;
+      state.augmentLog = [`♻️ Regenerating "${fieldName}" with feedback...`];
+      render();
+      
+      try {
+        // Use custom feedback if provided, otherwise use stored feedback
+        const feedback = customFeedback || quality.feedback || 'Improve clarity and specificity';
+        const improvedValue = await regenerateFieldWithFeedback(dataset, fieldName, feedback);
+        
+        if (improvedValue) {
+          dataset.metadata[fieldName] = improvedValue;
+          state.augmentLog.push(`✅ New value generated`);
+          render();
+          
+          // Re-judge the improved field
+          state.augmentLog.push(`⚖️ Re-judging quality...`);
+          render();
+          
+          const newScores = await judgeMetadataQuality(dataset, [fieldName]);
+          
+          if (newScores[fieldName]) {
+            dataset.quality[fieldName] = {
+              score: newScores[fieldName].score,
+              feedback: newScores[fieldName].feedback,
+              attempts: (quality.attempts || 1) + 1,
+              judgedAt: new Date().toISOString()
+            };
+            
+            state.augmentLog.push(`📊 New score: ${newScores[fieldName].score}/10`);
+          }
+          
+          saveState();
+          showToast(`Field regenerated (${dataset.quality[fieldName]?.score || '?'}/10)`, 'success');
+        } else {
+          throw new Error('Failed to generate improved value');
+        }
+      } catch (error) {
+        state.augmentLog.push(`❌ Error: ${error.message}`);
+        showToast('Regeneration failed', 'error');
+      }
+      
+      state.augmenting = false;
+      if (state.currentDataset?.id === datasetId) {
+        state.currentDataset = dataset;
+      }
+      render();
+    },
+    
+    /**
+     * Re-judge all fields (useful after manual edits)
+     */
+    rejudgeAllFields: async (datasetId) => {
+      const dataset = state.datasets.find(d => d.id === datasetId);
+      if (!dataset || !dataset.metadata) return;
+      
+      state.augmenting = true;
+      state.augmentLog = ['⚖️ Re-judging all metadata fields...'];
+      render();
+      
+      try {
+        const qualityScores = await judgeMetadataQuality(dataset);
+        
+        // Update quality scores (preserve attempt counts)
+        dataset.quality = dataset.quality || {};
+        Object.entries(qualityScores).forEach(([fieldName, result]) => {
+          const existing = dataset.quality[fieldName] || {};
+          dataset.quality[fieldName] = {
+            score: result.score,
+            feedback: result.feedback,
+            attempts: existing.attempts || 1,
+            judgedAt: new Date().toISOString()
+          };
+        });
+        
+        const scores = Object.values(qualityScores).map(q => q.score).filter(s => typeof s === 'number');
+        const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : 'N/A';
+        
+        state.augmentLog.push(`📊 Overall Quality: ${avgScore}/10`);
+        saveState();
+        showToast(`Quality re-assessed: ${avgScore}/10`, 'success');
+        
+      } catch (error) {
+        state.augmentLog.push(`❌ Error: ${error.message}`);
+        showToast('Judging failed', 'error');
+      }
+      
+      state.augmenting = false;
+      if (state.currentDataset?.id === datasetId) {
+        state.currentDataset = dataset;
+      }
+      render();
+    },
+    
+    /**
+     * Accept current value - marks field as accepted (score becomes 10)
+     */
+    acceptCurrentValue: (datasetId, fieldName) => {
+      const dataset = state.datasets.find(d => d.id === datasetId);
+      if (!dataset || !dataset.quality?.[fieldName]) return;
+      
+      dataset.quality[fieldName] = {
+        ...dataset.quality[fieldName],
+        score: 10,
+        feedback: 'Accepted by user',
+        accepted: true,
+        acceptedAt: new Date().toISOString()
+      };
+      
+      saveState();
+      showToast(`"${fieldName}" accepted`, 'success');
+      
+      if (state.currentDataset?.id === datasetId) {
+        state.currentDataset = dataset;
+      }
+      render();
+    },
+    
+    /**
+     * Dismiss feedback - hides feedback panel without changing score
+     */
+    dismissFeedback: (datasetId, fieldName) => {
+      const dataset = state.datasets.find(d => d.id === datasetId);
+      if (!dataset || !dataset.quality?.[fieldName]) return;
+      
+      // Set score to 7 to hide feedback panel (but preserve original score in a different field)
+      dataset.quality[fieldName] = {
+        ...dataset.quality[fieldName],
+        dismissed: true,
+        originalScore: dataset.quality[fieldName].score,
+        score: 7 // This hides the feedback panel
+      };
+      
+      saveState();
+      showToast(`Feedback dismissed for "${fieldName}"`, 'info');
+      
+      if (state.currentDataset?.id === datasetId) {
+        state.currentDataset = dataset;
+      }
+      render();
+    },
+    
     inferSingleField: async (datasetId, fieldId) => {
       const dataset = state.datasets.find(d => d.id === datasetId);
       const field = state.schema.find(f => f.id === fieldId);
       if (!dataset || !field) return;
       
-      if (!state.settings.apiKey) {
+      if (!state.settings.apiKey && state.settings.provider !== 'custom') {
         showToast('Please configure your API key in Settings', 'error');
         return;
       }
@@ -4357,7 +6573,7 @@ RULES:
 })();
 
 // Initialize app when DOM is ready
-document.addEventListener('DOMContentLoaded', App.init);
+document.addEventListener("DOMContentLoaded", App.init);
   </script>
 </body>
 </html>

@@ -1,142 +1,110 @@
 # Changelog
 
-All notable changes to Dataset Metadata Augmenter will be documented in this file.
+All notable changes to the Dataset Metadata Augmenter project.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [2.1.0] - 2026-07-15
 
-## [2.0.0] - 2026-04-08
+### Added
 
-### 🚀 Major Features
+**Quality Scoring System (Two-Agent Architecture)**
+- Proponent-Judge architecture inspired by the World Bank AI metadata framework
+- Judge Agent auto-scores each field 0-10 using a quality rubric after generation
+- Quality Summary Card with overall score, progress bar, and per-category counts
+- Per-field visual indicators (🟢 🟡 🔴)
+- Editable feedback — modify the judge's suggestions before regenerating
+- Accept / Regenerate / Dismiss actions per field
+- Up to 3 regeneration attempts per field with feedback loop
+- Re-Judge All button to re-assess after manual edits
+- Quality rubric documented in the Guide page
 
-#### OpenMetadata Integration
-- **Push to OpenMetadata**: Direct integration with OpenMetadata v1.3+ data catalogs
-- Automatically creates Service → Database → Schema → Table hierarchy
-- Pushes column metadata with data types and statistics
-- Rich descriptions with source information
-- CORS proxy server (`server.py`) for local development
-- Test connection button with auth validation
+**Ashoka Datalake Schema Preset**
+- 18-field preset for social sector datasets in India
+- Fields include Domain/Cluster, Coverage (Spatial/Temporal), Methodology Notes, Data Quality Notes
+- Purple gradient button in the Schema tab
 
-#### World Bank Metadata Standards
-- Replaced all schema presets with 5 official World Bank metadata standards:
-  - 📊 **Microdata (DDI 2.5)**: Surveys, censuses, unit-level data (31 fields)
-  - 📄 **Document**: Reports, publications, PDFs (33 fields)
-  - 📈 **Timeseries**: Time-based indicators, WDI-style data (33 fields)
-  - 📋 **Table**: Statistical tables, cross-tabulations (30 fields)
-  - 🗺️ **Geospatial (ISO 19115)**: GIS data, maps, satellite imagery (40 fields)
-- Each field includes descriptions for better AI inference
+**Browse OpenMetadata Catalog**
+- New "🔗 Browse Catalog" tab in navigation
+- Quick access button in Datasets tab
+- Fetches tables from OpenMetadata via the existing CORS proxy
+- Search/filter by table name, description, or FQN
+- One-click "Load →" to import a table as a dataset with sample data
+- Pre-populates title, description, and source URL from OpenMetadata
 
-#### Custom Schema Management
-- **Save as Default**: Set your preferred schema as the default
-- **Save Custom Schemas**: Create named schema presets for different workflows
-- **Load/Delete Custom Schemas**: Manage your saved schemas
-- Schemas persist across sessions in localStorage
+**Groq Provider**
+- New "Groq (Fast & Free)" provider
+- 6 models: Llama 3.3 70B, Llama 3.1 8B, Llama3 70B/8B, Mixtral 8x7B, Gemma 2 9B
+- Uses OpenAI-compatible format
+- Free tier: 1,000 requests/day
 
-#### DuckDuckGo Web Search Integration
-- **Free web search**: No API key required
-- Searches for dataset context, license info, methodology
-- Results injected into LLM prompt for better metadata inference
-- Toggle on/off in Settings
-- Test search button to verify functionality
+**UI Redesign — Multi-Page Site**
+- Professional landing page with hero section, feature cards, comparison table
+- Getting Started Guide with step-by-step documentation and quality rubric
+- Tool page (existing app functionality preserved)
+- Site navigation: Home | Guide | GitHub | Theme Toggle | Open Tool
+- Modern design system: DM Sans + JetBrains Mono, indigo→purple→pink gradient
+- Glassmorphism navigation bar
 
-#### URL Fetching with CORS Proxy Fallbacks
-- **Fetch Source URL**: Extract metadata from dataset source pages
-- **4 CORS proxy fallbacks**: Automatic failover if one proxy fails
-  - corsproxy.io
-  - allorigins.win
-  - corsproxy.org
-  - codetabs.com
-- Extracts title, description, keywords from web pages
+**Light/Dark Theme Toggle**
+- Toggle button (☀️/🌙) in navigation
+- Persists preference to localStorage
+- Respects `prefers-color-scheme` on first visit
+- All CSS variables adapt via `[data-theme]` attribute
 
-#### Enhanced LLM Support
-- **Updated model lists** for all providers (April 2026):
-  - Anthropic: Claude Opus 4.5/4.6, Sonnet 4.5/4.6, Haiku 4.5
-  - OpenAI: GPT-5.4, GPT-4.1, o4-mini (with web search via Responses API)
-  - Google: Gemini 3.1 Pro, Gemini 2.5 Pro/Flash/Lite
-  - Mistral: Magistral Medium/Small, Codestral
-  - Perplexity: Sonar, Sonar Pro, Sonar Reasoning (with built-in web search)
-- **Web search models**: OpenAI and Perplexity models with live web search
-- **Per-field inference**: Click to infer individual fields with AI
+**Smart Schema Import**
+- Supports 3 JSON formats: native `{name, type}`, Ashoka `{Field, Description}`, plain string array
+- Auto-converts unfamiliar formats to internal schema
+- Removed auto-enum detection (was forcing enum on Domain, Coverage, etc.)
+- AI Infer enabled by default for all fields except URL/Link
 
-#### Custom / Local Model Support (NEW)
-- **Use any model**: Ollama, LM Studio, vLLM, text-generation-webui, or any OpenAI-compatible API
-- **Configurable settings**: Endpoint URL, model name, max tokens, temperature
-- **API format options**: OpenAI-compatible (default) or Anthropic-compatible
-- **No API key required**: For local models running on your machine
-- **Popular local models**: llama3, mistral, codellama, phi3, gemma2, qwen2
+**CORS Proxy Hijack Detection**
+- Removed unreliable proxies (corsproxy.io, corsproxy.org) that started serving VPN ads
+- Added content validation to detect hijacked responses
+- Automatic fallback through reliable proxies (allorigins.win, cors.sh, thingproxy, codetabs)
+- Increased timeout to 15s for slower government sites
 
-#### Full Data Statistics for Accurate Metadata (NEW)
-- **Time range computed from ALL data**: Not just sample rows
-- **Complete geographic coverage**: All unique states/districts/regions
-- **All categorical values**: Full list for columns with ≤100 unique values
-- **True numeric ranges**: Min/max from entire dataset
-- **Year detection**: Automatically identifies year columns and extracts all years
+### Fixed
+- Export dropdowns now collapse when clicking outside
+- Schema import correctly handles the Ashoka Datalake JSON format
+- Fields marked as "enum" no longer default to `aiInfer: false`
 
-### ✨ Improvements
+### Changed
+- Feedback panel only shows for fields scoring below 7 (cleaner UI)
 
-#### UI/UX
-- Improved Settings page with better organization
-- OpenMetadata configuration section with setup instructions
-- Web Search section with toggle and test button
-- Schema preset buttons with tooltips and descriptions
-- Better toast notifications with emoji indicators
-- Footer with author attribution
-- Dataset action menu with more options
 
-#### Data Processing
-- Column statistics now include sample values
-- Better data type detection (numeric, date, string)
-- Improved fill rate and unique value counting
-- Statistics dashboard for uploaded files
+## [2.0.0] - 2026-04-09
 
-#### Export Options
-- Export as CSV
-- Export as Excel (.xlsx)
-- Export as JSON (metadata only or full)
-- Push to OpenMetadata
+### Added
+- OpenMetadata Integration — push datasets directly to OpenMetadata catalog
+- World Bank Schema Presets: Microdata (DDI 2.5), Document, Timeseries, Table, Geospatial (ISO 19115)
+- DuckDuckGo Web Search — free web search integration
+- Source URL Fetching — extract metadata from data portal pages
+- Full Data Statistics — computed from entire dataset
+- Custom Schema Management — save, load, manage custom schemas
+- Local Model Support — Ollama, LM Studio, vLLM via custom endpoint
+- Multiple Export Formats — CSV, Excel, JSON, Full Dataset
+- Dark Mode — auto-switching based on system preferences
 
-#### Code Quality
-- Better error handling throughout
-- Console logging for debugging
-- Cleaner code organization
-- Modular function structure
+### Changed
+- Complete UI redesign with card-based layout
+- Improved prompt engineering for better metadata quality
 
-### 🐛 Bug Fixes
-- Fixed schema preset loading issues
-- Fixed 409 conflict handling in OpenMetadata integration
-- Fixed proxy status code passthrough
-- Fixed tag validation errors (tags now optional)
-- Fixed CORS issues with multiple proxy fallbacks
 
-### 📁 New Files
-- `server.py`: CORS proxy server for OpenMetadata integration
-- `CHANGELOG.md`: Version history documentation
+## [1.0.0] - 2026-04
+
+### Added
+- Initial release
+- LLM Integration — Anthropic, OpenAI, Google, Mistral, Perplexity
+- CSV/Excel/JSON upload
+- Per-field inference
+- Metadata export — CSV, Excel, JSON formats
+
 
 ---
 
-## [1.0.0] - 2024-12-01
+## Version Comparison
 
-### Initial Release
-
-#### Features
-- Multi-provider LLM support (Anthropic, OpenAI, Google, Mistral)
-- Dynamic schema builder with field types
-- CSV/Excel/JSON file upload with preview
-- AI-powered metadata augmentation
-- In-data statistics computation
-- Local persistence with localStorage
-- Dark mode support
-- Export to JSON format
-
-#### Schema Presets
-- Government Dataset
-- Survey Data
-- Time Series
-
----
-
-## Version Naming
-
-- **Major (X.0.0)**: Breaking changes, major new features
-- **Minor (0.X.0)**: New features, backwards compatible
-- **Patch (0.0.X)**: Bug fixes, minor improvements
+| Version | Highlights |
+|---------|-----------|
+| **2.1.0** (current) | Quality scoring, Ashoka preset, Browse catalog, Groq, UI redesign, theme toggle |
+| 2.0.0 | OpenMetadata push, Web search, World Bank presets, Local models |
+| 1.0.0 | Initial release |
