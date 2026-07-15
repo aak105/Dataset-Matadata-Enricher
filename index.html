@@ -1893,6 +1893,24 @@ ollama pull llama3
           ],
           endpoint: 'https://api.groq.com/openai/v1/chat/completions'
         },
+        openrouter: {
+          name: 'OpenRouter (300+ models)',
+          models: [
+            'meta-llama/llama-3.3-70b-instruct:free',
+            'deepseek/deepseek-v4-flash:free',
+            'openai/gpt-oss-120b:free',
+            'openai/gpt-oss-20b:free',
+            'meta-llama/llama-4-maverick:free',
+            'meta-llama/llama-4-scout:free',
+            'google/gemini-2.0-flash-exp:free',
+            'nvidia/llama-3.1-nemotron-70b:free',
+            'anthropic/claude-sonnet-4-6',
+            'openai/gpt-5.4',
+            'google/gemini-3.1-pro',
+            'deepseek/deepseek-v4-flash'
+          ],
+          endpoint: 'https://openrouter.ai/api/v1/chat/completions'
+        },
         custom: {
           name: 'Custom / Local Model',
           models: [],  // User adds their own
@@ -1994,7 +2012,19 @@ ollama pull llama3
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.settings) {
-          state.settings = { ...state.settings, ...parsed.settings };
+          // Preserve the fresh `providers` object from the file — don't let old
+          // localStorage overwrite it (that would hide any new providers added
+          // in a code update, like Groq or OpenRouter).
+          const freshProviders = state.settings.providers;
+          const savedSettings = { ...parsed.settings };
+          delete savedSettings.providers;  // never load providers from storage
+          state.settings = { ...state.settings, ...savedSettings, providers: freshProviders };
+          
+          // If the saved provider no longer exists in fresh providers, fall back
+          if (!freshProviders[state.settings.provider]) {
+            state.settings.provider = 'anthropic';
+            state.settings.model = freshProviders.anthropic.models[0];
+          }
         }
         if (parsed.schema) {
           state.schema = parsed.schema;
@@ -2751,6 +2781,23 @@ ollama pull llama3
         };
         break;
       
+      case 'openrouter':
+        endpoint = providerConfig.endpoint;
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          // OpenRouter recommends these optional headers for analytics
+          'HTTP-Referer': window.location.origin || 'https://aak105.github.io/Dataset-Metadata-Enricher',
+          'X-Title': 'Dataset Metadata Augmenter'
+        };
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.3,
+          max_tokens: 4096
+        };
+        break;
+      
       case 'custom':
         // Custom/Local model configuration
         const customConfig = providerConfig.customConfig;
@@ -2813,6 +2860,7 @@ ollama pull llama3
       case 'mistral':
       case 'perplexity':
       case 'groq':
+      case 'openrouter':
         return data.choices?.[0]?.message?.content || '';
       case 'openai_search':
         // OpenAI Responses API returns output array with message items
